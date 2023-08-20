@@ -317,6 +317,10 @@ def ALNS(distance_matrix,locations,demands):
       
     return best_solution,best_cost
 
+def write_to_file(file_name, data):
+ with open(file_name, 'w') as f:
+  data = str(data)
+  f.write(data)
 
 if __name__ == '__main__':
     np.random.seed(1)#固定随机种子，使得每次运行结果相同
@@ -334,6 +338,8 @@ if __name__ == '__main__':
     print("打印locations：",locations,"打印demands：",demands)
     print("最终最优解方案为:",best_solution,"解成本为:",best_cost)
     print("回路数：",len(best_solution))
+    write_to_file('path', best_solution)
+    write_to_file('demand', demands)
     draw(best_solution,locations,'1')
    
     
