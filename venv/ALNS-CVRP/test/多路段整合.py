@@ -2,21 +2,81 @@ import numpy as np
 from vrp import *
 import matplotlib.pyplot as plt
 from scipy.spatial import KDTree
-
+from typing import List, Tuple
+import math
 def write_to_file(file_name, data):
  with open(file_name, 'a') as f:
   data = str(data)
   f.write(data)
   f.write(' ')
   # f.write('\n')
-def draw(path1,locations):
+def draw(path1,locations,points):
     #路线图绘制
     fig=plt.figure(1)
     for path in path1:
         plt.plot(locations[path][:,0],locations[path][:,1], marker='o')
-
+    plt.scatter([p[0] for p in points], [p[1] for p in points], marker='^', s=60)
+    for i, p in enumerate(points):
+        plt.annotate(str(i+1), (p[0] + 0.7, p[1] - 0.5))
+    # 设置轴范围
+    plt.xlim(0, 80)
+    plt.ylim(0, 80)
     plt.show()
+def pathdistance(lst,pos,k):
+    # 初始化距离之和为0
+    total_distance = 0
+    points=[]
+    # 遍历列表中的每个点
+    n=0
+    for point, _ in lst:
+        # 计算点到原点的距离
+        points.append(point)
+        distance = math.sqrt((point[0] - pos[0]) ** 2 + (point[1] - pos[1]) ** 2)
+        # 将距离加入总距离
+        n+=1
+        total_distance += distance
+    average=total_distance/n
+    # plt.plot(points[:][0],points[:][1],color='black')
+    # 打印总距离
+    print("距离:",n,average)
+    return n,average,k
+def nearest_k_points(x_values, y_values):
+    kdtree = KDTree(np.vstack((x_values, y_values)).T)
+    dist, index = kdtree.query([lst1[0][0],lst1[0][1] ],k=10)
+    for i in range(len(index)):
+        indx = index[i]
+        d.append(dist[i])
+        nearest_k_points.append(kdtree.data[indx])
+    nearest_k_points = [(d[0], d[1]) for d in nearest_k_points]
+    # print(index)
+    print("nearest_k_points:",nearest_k_points)
+    print("current point:",lst1[0])
+    return nearest_k_points
+def find_k_nearest_neighbors(points: List[Tuple[float, float]], target_point: Tuple[float, float], k: int) -> List[
+    Tuple[Tuple[float, float], float]]:
+    # 构建kdtree
+    tree = KDTree(points)
 
+    # 找k个最近邻
+    dist, ind = tree.query([target_point], k=k)
+    # print(ind)
+    # print("nearest_k_points:", nearest_k_points)
+    # 返回k个最近邻的坐标和距离
+    return [(tuple(tree.data[i]), d) for i, d in zip(ind[0], dist[0])]
+#找距离平均最小路段
+def foundPath(pos):
+    k = -1
+    averageNum = []
+    kNum = []
+    for p in pos:
+        k += 1
+        n, average, k = pathdistance(p, lst1[0], k)
+        averageNum.append(average)
+        kNum.append(k)
+    min_val = min(averageNum)
+    min_idx = averageNum.index(min_val)
+    print(min_idx)
+    return min_idx
 with open('../path', 'r') as f:
    path = f.read()
 path = eval(path)  # 将字符串转换为列表格式
@@ -32,17 +92,41 @@ path = eval(path)  # 将字符串转换为列表格式
 lst1, lst2=vrp()
 locations = np.array(lst1)
 lst3 = list(zip(lst1, lst2))
-print(lst3)
+print("带索引路径点lst3",lst3)
 pos = []
 for sublist in path:
     temp = []
     for index in sublist:
         temp.append(lst3[index])
     pos.append(temp)
-print(pos)
-draw(path,locations)
-kdtree = KDTree(np.vstack((lst1[1:][0], lst1[1:][1])).T)
-dist, index = kdtree.query([lst1[0][0], lst1[0][1]],k=1)
+print("路段pos",pos)
+##求最近K近邻
+# d=[]
+# nearest_k_points=[]
+# print("除出发点系列lst1[1:]",lst1[1:])
+# x_values = [item[0] for item in lst1[1:]]
+# y_values = [item[1] for item in lst1[1:]]
+# kdtree = KDTree(np.vstack((x_values, y_values)).T)
+# dist, index = kdtree.query([lst1[0][0],lst1[0][1] ],k=10)
+# for i in range(len(index)):
+#     indx = index[i]
+#     d.append(dist[i])
+#     nearest_k_points.append(kdtree.data[indx])
+# nearest_k_points = [(d[0], d[1]) for d in nearest_k_points]
+# # print(index)
+# print("nearest_k_points:",nearest_k_points)
+# print("current point:",lst1[0])
+#points = [(41, 49), (35, 17), (55, 45), (55, 20), (15, 30), (25, 30), (20, 50), (10, 43), (55, 60), (30, 60), (20, 65), (50, 35), (30, 25), (15, 10), (30, 5), (10, 20), (5, 30), (20, 40), (15, 60), (45, 65), (45, 20), (45, 10), (55, 5), (65, 35), (65, 20), (45, 30), (35, 40), (41, 37), (64, 42), (40, 60), (31, 52), (35, 69), (53, 52), (65, 55), (63, 65), (2, 60), (20, 20), (5, 5), (60, 12), (40, 25), (42, 7), (24, 12), (23, 3), (11, 14), (6, 38), (2, 48), (8, 56), (13, 52), (6, 68), (47, 47), (49, 58), (27, 43), (37, 31), (57, 29), (63, 23), (53, 12), (32, 12), (36, 26), (21, 24), (17, 34), (12, 24), (24, 58), (27, 69), (15, 77), (62, 77), (49, 73), (67, 5), (56, 39), (37, 47), (37, 56), (57, 68), (47, 16), (44, 17), (46, 13), (49, 11), (49, 42), (53, 43), (61, 52), (57, 48), (56, 37), (55, 54), (15, 47), (14, 37), (11, 31), (16, 22), (4, 18), (28, 18), (26, 52), (26, 35), (31, 67), (15, 19), (22, 22), (18, 24), (26, 27), (25, 24), (22, 27), (25, 21), (19, 21), (20, 26), (18, 18)]
+#求K近邻
+nearest_neighbors = find_k_nearest_neighbors(lst1[1:], lst1[0],2)
+print("nearest_neighbors:", nearest_neighbors)
+k_neighbors = [x[0] for x in nearest_neighbors]
+print(k_neighbors)
 
-
+##求距离平均最小路段 返回最小路段索引号
+minpathindex=foundPath(pos)
+p=[p[0] for p in pos[8]]
+print("最小路段：",p)
+#画图
+draw(path,locations,k_neighbors)
 

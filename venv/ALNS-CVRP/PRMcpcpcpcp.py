@@ -622,9 +622,10 @@ def clccircle(Cpionts):
         R.append(r)
         cPos.append(cpos)
         #plt.scatter(cpos[0],cpos[1], c='r', s=1)
+
+    # print("半径R:",R)
+    #print("圆心:",cPos)
     return R,cPos
-   # print("半径R:",R)
-   # print("圆心:",cPos)
 def b_splin(p):
     k = 3  # k阶、k-1次B样条
 
@@ -818,7 +819,7 @@ def main(rng=None):
         #rrr.append(pos[0][0])
         oxx.append(pos[0])
         oyy.append(pos[1])
-
+        #print("oxx:",oxx)
         # # 6 外圈障碍物
         # ReadObstacle(6, ox, oy, 1.7, 8, 5)
         # p1 = np.array([7.59297399782e-05, 5.93557160755e-07])
