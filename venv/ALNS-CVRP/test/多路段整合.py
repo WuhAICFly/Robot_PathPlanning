@@ -10,7 +10,7 @@ def write_to_file(file_name, data):
   f.write(data)
   f.write(' ')
   # f.write('\n')
-def draw(path1,locations,points):
+def draw(path1,locations,points,minpath):
     #路线图绘制
     fig=plt.figure(1)
     for path in path1:
@@ -18,6 +18,9 @@ def draw(path1,locations,points):
     plt.scatter([p[0] for p in points], [p[1] for p in points], marker='^', s=60)
     for i, p in enumerate(points):
         plt.annotate(str(i+1), (p[0] + 0.7, p[1] - 0.5))
+    for pos in minpath:
+        print(pos[:][0])
+        plt.plot(pos[:][0], pos[:][1],marker='*')
     # 设置轴范围
     plt.xlim(0, 80)
     plt.ylim(0, 80)
@@ -64,13 +67,13 @@ def find_k_nearest_neighbors(points: List[Tuple[float, float]], target_point: Tu
     # 返回k个最近邻的坐标和距离
     return [(tuple(tree.data[i]), d) for i, d in zip(ind[0], dist[0])]
 #找距离平均最小路段
-def foundPath(pos):
+def foundPath(pos,piont):
     k = -1
     averageNum = []
     kNum = []
     for p in pos:
         k += 1
-        n, average, k = pathdistance(p, lst1[0], k)
+        n, average, k = pathdistance(p, piont, k)
         averageNum.append(average)
         kNum.append(k)
     min_val = min(averageNum)
@@ -92,7 +95,7 @@ path = eval(path)  # 将字符串转换为列表格式
 lst1, lst2=vrp()
 locations = np.array(lst1)
 lst3 = list(zip(lst1, lst2))
-print("带索引路径点lst3",lst3)
+print("带需求路径点lst3",lst3)
 pos = []
 for sublist in path:
     temp = []
@@ -119,14 +122,17 @@ print("路段pos",pos)
 #points = [(41, 49), (35, 17), (55, 45), (55, 20), (15, 30), (25, 30), (20, 50), (10, 43), (55, 60), (30, 60), (20, 65), (50, 35), (30, 25), (15, 10), (30, 5), (10, 20), (5, 30), (20, 40), (15, 60), (45, 65), (45, 20), (45, 10), (55, 5), (65, 35), (65, 20), (45, 30), (35, 40), (41, 37), (64, 42), (40, 60), (31, 52), (35, 69), (53, 52), (65, 55), (63, 65), (2, 60), (20, 20), (5, 5), (60, 12), (40, 25), (42, 7), (24, 12), (23, 3), (11, 14), (6, 38), (2, 48), (8, 56), (13, 52), (6, 68), (47, 47), (49, 58), (27, 43), (37, 31), (57, 29), (63, 23), (53, 12), (32, 12), (36, 26), (21, 24), (17, 34), (12, 24), (24, 58), (27, 69), (15, 77), (62, 77), (49, 73), (67, 5), (56, 39), (37, 47), (37, 56), (57, 68), (47, 16), (44, 17), (46, 13), (49, 11), (49, 42), (53, 43), (61, 52), (57, 48), (56, 37), (55, 54), (15, 47), (14, 37), (11, 31), (16, 22), (4, 18), (28, 18), (26, 52), (26, 35), (31, 67), (15, 19), (22, 22), (18, 24), (26, 27), (25, 24), (22, 27), (25, 21), (19, 21), (20, 26), (18, 18)]
 #求K近邻
 nearest_neighbors = find_k_nearest_neighbors(lst1[1:], lst1[0],2)
-print("nearest_neighbors:", nearest_neighbors)
+print("离出发点最近nearest_neighbors:", nearest_neighbors)
 k_neighbors = [x[0] for x in nearest_neighbors]
 print(k_neighbors)
 
-##求距离平均最小路段 返回最小路段索引号
-minpathindex=foundPath(pos)
-p=[p[0] for p in pos[8]]
+##求距离平均最小路段 返回最小路段
+minpathindex=foundPath(pos,k_neighbors[0])
+p=[p[0] for p in pos[minpathindex]]
 print("最小路段：",p)
+neighbors = find_k_nearest_neighbors(p, lst1[0],3)
+n_neighbors = [x[0] for x in neighbors]
+print("最小路段中离出发点最近邻：",n_neighbors)
 #画图
-draw(path,locations,k_neighbors)
+draw(path,locations,k_neighbors,p)
 
