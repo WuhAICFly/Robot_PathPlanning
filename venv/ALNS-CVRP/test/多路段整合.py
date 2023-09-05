@@ -19,7 +19,6 @@ def draw(path1,locations,points,minpath):
     for i, p in enumerate(points):
         plt.annotate(str(i+1), (p[0] + 0.7, p[1] - 0.5))
     for pos in minpath:
-        print(pos[:][0])
         plt.plot(pos[:][0], pos[:][1],marker='*')
     # 设置轴范围
     plt.xlim(0, 80)
@@ -80,6 +79,15 @@ def foundPath(pos,piont):
     min_idx = averageNum.index(min_val)
     print(min_idx)
     return min_idx
+
+def findindex(target,pos):
+    #target = (2.0, 60.0)
+    for i, item in enumerate(pos):
+        if target in [x[0] for x in item]:
+            return i
+    else:
+        return -1
+
 with open('../path', 'r') as f:
    path = f.read()
 path = eval(path)  # 将字符串转换为列表格式
@@ -125,7 +133,11 @@ nearest_neighbors = find_k_nearest_neighbors(lst1[1:], lst1[0],2)
 print("离出发点最近nearest_neighbors:", nearest_neighbors)
 k_neighbors = [x[0] for x in nearest_neighbors]
 print(k_neighbors)
-
+#求最近邻所在路段索引
+id=findindex(k_neighbors[0],pos)
+print("路点在路段索引",pos[id])
+#删除第id项，即第id项路段
+del pos[id]
 ##求距离平均最小路段 返回最小路段
 minpathindex=foundPath(pos,k_neighbors[0])
 p=[p[0] for p in pos[minpathindex]]

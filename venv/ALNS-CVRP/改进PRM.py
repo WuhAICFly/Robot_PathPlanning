@@ -198,9 +198,9 @@ def generate_road_map(sample_x, sample_y, rr , rrr, kdtree, obstacle_kd_tree):
             nx = sample_x[indexes[ii]]
             ny = sample_y[indexes[ii]]
             # 对每个领域点$q'$进行判断，如果$q$和$q'$尚未形成路径，则将其连接形成路径并进行碰撞检测，若无碰撞，则保留该路径。
-            if not is_collision(ix, iy, nx, ny, rr,rrr,kdtree, obstacle_kd_tree):
-            #if not collision(nx, ny,rr,rrr,kdtree):
-                edge_id.append(indexes[ii])
+            #if not is_collision(ix, iy, nx, ny, rr,rrr,kdtree, obstacle_kd_tree):
+            if not collision(nx, ny,rr,rrr,kdtree):
+              edge_id.append(indexes[ii])
 
 
             if len(edge_id) >= N_KNN:
