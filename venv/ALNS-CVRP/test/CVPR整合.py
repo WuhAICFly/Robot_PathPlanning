@@ -131,69 +131,83 @@ print("pos段数",len(pos))
 # print("nearest_k_points:",nearest_k_points)
 # print("current point:",lst1[0])
 #points = [(41, 49), (35, 17), (55, 45), (55, 20), (15, 30), (25, 30), (20, 50), (10, 43), (55, 60), (30, 60), (20, 65), (50, 35), (30, 25), (15, 10), (30, 5), (10, 20), (5, 30), (20, 40), (15, 60), (45, 65), (45, 20), (45, 10), (55, 5), (65, 35), (65, 20), (45, 30), (35, 40), (41, 37), (64, 42), (40, 60), (31, 52), (35, 69), (53, 52), (65, 55), (63, 65), (2, 60), (20, 20), (5, 5), (60, 12), (40, 25), (42, 7), (24, 12), (23, 3), (11, 14), (6, 38), (2, 48), (8, 56), (13, 52), (6, 68), (47, 47), (49, 58), (27, 43), (37, 31), (57, 29), (63, 23), (53, 12), (32, 12), (36, 26), (21, 24), (17, 34), (12, 24), (24, 58), (27, 69), (15, 77), (62, 77), (49, 73), (67, 5), (56, 39), (37, 47), (37, 56), (57, 68), (47, 16), (44, 17), (46, 13), (49, 11), (49, 42), (53, 43), (61, 52), (57, 48), (56, 37), (55, 54), (15, 47), (14, 37), (11, 31), (16, 22), (4, 18), (28, 18), (26, 52), (26, 35), (31, 67), (15, 19), (22, 22), (18, 24), (26, 27), (25, 24), (22, 27), (25, 21), (19, 21), (20, 26), (18, 18)]
-#求K近邻
-nearest_neighbors,ind1 = find_k_nearest_neighbors(lst1[1:], lst1[0],2)
-print("离出发点最近nearest_neighbors:", nearest_neighbors)
-k_neighbors = [x[0] for x in nearest_neighbors]
-print(k_neighbors)
-#求最近邻所在路段索引
-id=findindex(k_neighbors[0],pos)
-print(id)
-print("路点在路段pos[id]",pos[id])
-my_list=pos[id]
-#删除第id项，即第id项路段
-del pos[id]
-##求距离平均最小路段 返回最小路段
-minpathindex=foundPath(pos,k_neighbors[0])
-p=[p[0] for p in pos[minpathindex]]
-print("最小距离路段：",p)
-print("带需求最小距离路段：",pos[minpathindex])
-neighbors,ind2 = find_k_nearest_neighbors(p, k_neighbors[0],len(p))
-n_neighbors = [x[0] for x in neighbors]
-print("最小距离路段中离出发点最近邻：",n_neighbors)
-print("最小距离路段中离出发点带距离最近邻：",neighbors)
-reorder_p = sorted(pos[minpathindex], key=lambda x: next((i[1] for i in neighbors if i[0] == x[0]), None))
-print("带需求最小距离路段重排reorder_p：",reorder_p)
 
-print(my_list)
-q=[q[1] for q in my_list]
-total = sum(q)
-num=(ind1[0][0]+1)
-print(num)
-Free_capacity=capacity-total+ (lst3[num][1]/2)
-print("容量和：",Free_capacity)
-goal=[]
-for i in range(2, len(reorder_p)):
-     if reorder_p[i][1]<Free_capacity:
-         goal.append(reorder_p[i][1]/neighbors[i][1])#容量尽量大，距离尽量小
-     else: break
-print("goal:",goal)
-if goal!=[]:
-   maxgoal=max(goal)
-   index = goal.index(maxgoal)+2
-   print(maxgoal,index)
+# #求K近邻
+# nearest_neighbors,ind1 = find_k_nearest_neighbors(lst1[1:], lst1[0],2)
+# print("离出发点最近nearest_neighbors:", nearest_neighbors)
+# k_neighbors = [x[0] for x in nearest_neighbors]
+# print(k_neighbors)
+# #求最近邻所在路段索引
+# id=findindex(k_neighbors[0],pos)
+# print(id)
+# print("路点在路段pos[id]",pos[id])
+n=0
+currentPath=pos[n]
+flag=0
+for i in range(13):
+    print("当前路段currentPath：",currentPath)
+#flag 相邻段能加入当前段flag=1，否则为0
+    if flag==1:
+      del currentPath[index]
+    curPath=[p[0] for p in currentPath]
+    neighbors,ind3 = find_k_nearest_neighbors(curPath, lst1[0],len(curPath))
+    print("离出发点最近neighbors:",neighbors[2][0])
 
-#把最近邻加入路段
-
-for neighborindex, item in enumerate(my_list):
-    if item[0] == (37.0, 31.0):
-        print("第一次出现相同项的索引是：", neighborindex)
-        break
-print("索引",neighborindex)
-new_lst = my_list[:neighborindex] + [(my_list[neighborindex][0], my_list[neighborindex][1] / 2.0)] + my_list[neighborindex+1:]
-ppos=[(my_list[neighborindex][0], my_list[neighborindex][1] / 2.0)]#拆分点
-new_lst.append(reorder_p[index])
-print("新的TSP路段:",new_lst)
-write_to_file('tsp1.txt',new_lst)
-##
-del reorder_p[index]
-reorder_p=[p[0] for p in reorder_p]
-neighbors,ind3 = find_k_nearest_neighbors(reorder_p, lst1[0],len(reorder_p))
-
-print("离出发点最近neighbors:",neighbors)
-
-
-
-#画图
-draw(path,locations,k_neighbors,pos[minpathindex])
+    my_list=currentPath
+    #删除第id项，即第id项路段
+    del pos[0]
+  ##求距离平均最小路段 返回最小路段
+    print("pos:",pos)
+    minpathindex=foundPath(pos,neighbors[2][0])
+    p=[p[0] for p in pos[minpathindex]]
+    print("最小距离路段：",p)
+#     print("带需求最小距离路段：",pos[minpathindex])
+#     neighbors,ind2 = find_k_nearest_neighbors(p, k_neighbors[0],len(p))
+#     n_neighbors = [x[0] for x in neighbors]
+#     print("最小距离路段中离出发点最近邻：",n_neighbors)
+#     print("最小距离路段中离出发点带距离最近邻：",neighbors)
+#     reorder_p = sorted(pos[minpathindex], key=lambda x: next((i[1] for i in neighbors if i[0] == x[0]), None))
+#     print("带需求最小距离路段重排reorder_p：",reorder_p)
+#
+#     print(my_list)
+#     q=[q[1] for q in my_list]
+#     total = sum(q)
+#     num=(ind1[0][0]+1)
+#     print(num)
+#     Free_capacity=capacity-total+ (lst3[num][1]/2)
+#     print("容量和：",Free_capacity)
+#     goal=[]
+#     for i in range(2, len(reorder_p)):
+#          if reorder_p[i][1]<Free_capacity:
+#              goal.append(reorder_p[i][1]/neighbors[i][1])#容量尽量大，距离尽量小
+#          else: break
+#     print("goal:",goal)
+#     if goal!=[]:
+#        maxgoal=max(goal)
+#        index = goal.index(maxgoal)+2
+#        print(maxgoal,index)
+#
+#     #把最近邻加入路段
+#
+#     for neighborindex, item in enumerate(my_list):
+#         if item[0] == (37.0, 31.0):
+#             print("第一次出现相同项的索引是：", neighborindex)
+#             break
+#     print("索引",neighborindex)
+#     new_lst = my_list[:neighborindex] + [(my_list[neighborindex][0], my_list[neighborindex][1] / 2.0)] + my_list[neighborindex+1:]
+#     ppos=[(my_list[neighborindex][0], my_list[neighborindex][1] / 2.0)]#拆分点
+#     new_lst.append(reorder_p[index])
+#     print("新的TSP路段:",new_lst)
+#     write_to_file('tsp1.txt',new_lst)
+#     ##
+#     del reorder_p[index]
+#     reorder_p=[p[0] for p in reorder_p]
+#     neighbors,ind3 = find_k_nearest_neighbors(reorder_p, lst1[0],len(reorder_p))
+#
+#     print("离出发点最近neighbors:",neighbors)
+#
+#
+#
+# #画图
+# draw(path,locations,k_neighbors,pos[minpathindex])
 
