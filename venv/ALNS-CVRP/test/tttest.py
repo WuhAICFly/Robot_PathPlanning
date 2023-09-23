@@ -14,3 +14,14 @@ print(list)
 t = [((37.0, 31.0), 7.0)]
 t = [i for x in t for i in x]
 print(t)
+
+tup = (1, 2, 3, 4, 5)
+
+# 将元组转换为列表
+
+lst = list(tup)
+
+# 打印转换后的列表
+
+print(lst)
+

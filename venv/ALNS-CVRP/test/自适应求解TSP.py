@@ -9,9 +9,37 @@ Created on Thu Apr  6 17:48:16 2023
 import numpy as np
 import random as rd
 import copy
+import matplotlib.pyplot as plt
+def draw(pos):
+    #路线图绘制
+    fig=plt.figure(1)
+    print(pos)
+    x =  [p[0] for p in pos]
+    y =  [p[1] for p in pos]
+    print(x)
+    print(y)
+    plt.scatter(x, y, marker='o', c='r', s=3)
+    #plt.plot(x, y,"-g")
+    plt.show()
+#points = np.array([[36.0, 26.0], [45.0, 20.0], [47.0, 16.0], [46.0, 13.0], [44.0, 17.0], [40.0, 25.0], [37.0, 31.0]])
+def readtxt(i):
+    with open('tsp1.txt', 'r') as f:
+        lines = f.readlines()
+        points = lines[i]
+        points = eval(points)
+        points = [p[0] for p in points]
+        del points[0]
+        # draw(points)
+        # 将元组转换为列表
+        lst = []
+        for p in points:
+            p = [i for i in p]
+            lst.append(p)
+        print(lst)
+        return lst
 
-points = np.array([[35.0, 35.0], [21.0, 24.0], [25.0, 21.0], [28.0, 18.0], [30.0, 25.0]])
-
+lst=readtxt(7)
+points = np.array(lst)
 distmat = np.zeros((len(points), len(points)))
 
 for i in range(len(points)):
