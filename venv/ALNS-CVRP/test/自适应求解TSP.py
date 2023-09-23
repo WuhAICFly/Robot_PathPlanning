@@ -38,7 +38,7 @@ def readtxt(i):
         print(lst)
         return lst
 
-lst=readtxt(7)
+lst=readtxt(0)
 points = np.array(lst)
 distmat = np.zeros((len(points), len(points)))
 
@@ -128,6 +128,8 @@ def max3Destroy(sol):      # remove city with 3 longest segments
             removed.append(solNew[0])
             sol.remove(solNew[0])
         else:
+            print(sol)
+            print(solNew[dis.index(disSort[len(disSort) - i - 1]) + 1])
             removed.append(solNew[dis.index(disSort[len(disSort) - i - 1]) + 1])
             sol.remove(solNew[dis.index(disSort[len(disSort) - i - 1]) + 1])
     return removed
