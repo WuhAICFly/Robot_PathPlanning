@@ -21,7 +21,7 @@ def draw(pos):
     plt.scatter(x, y, marker='o', c='r', s=3)
     #plt.plot(x, y,"-g")
     plt.show()
-#points = np.array([[36.0, 26.0], [45.0, 20.0], [47.0, 16.0], [46.0, 13.0], [44.0, 17.0], [40.0, 25.0], [37.0, 31.0]])
+#points = np.array([[0.91191249 0.47853374] [0.35985262 0.50004441] [0.30516784 0.71777097] [0.37472585 0.0264874 ] [0.20495103 0.49411449]])
 def readtxt(i):
     with open('tsp1.txt', 'r') as f:
         lines = f.readlines()
@@ -38,7 +38,7 @@ def readtxt(i):
         print(lst)
         return lst
 
-lst=readtxt(0)
+lst=readtxt(5)
 points = np.array(lst)
 distmat = np.zeros((len(points), len(points)))
 
@@ -128,8 +128,8 @@ def max3Destroy(sol):      # remove city with 3 longest segments
             removed.append(solNew[0])
             sol.remove(solNew[0])
         else:
-            print(sol)
-            print(solNew[dis.index(disSort[len(disSort) - i - 1]) + 1])
+           # print(sol)
+           # print(solNew[dis.index(disSort[len(disSort) - i - 1]) + 1])
             removed.append(solNew[dis.index(disSort[len(disSort) - i - 1]) + 1])
             sol.remove(solNew[dis.index(disSort[len(disSort) - i - 1]) + 1])
     return removed
