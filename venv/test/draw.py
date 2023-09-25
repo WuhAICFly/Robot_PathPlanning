@@ -1,4 +1,6 @@
 import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
+plt.rc('font',family='Times New Roman')
 
 def cut(s):
     w1_str = s.split('w')[1]
@@ -51,6 +53,6 @@ plt.plot(x, yy[5],label='w2='+str(ww[5]))
 # 添加标题和坐标轴标签以及图例
 plt.title('w1='+str(w1))
 plt.xlabel("s")
-plt.ylabel("m/s")
+plt.ylabel("curvature")
 plt.legend()
 plt.show()
