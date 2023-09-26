@@ -18,7 +18,7 @@ def cut(s):
     return w1, w2
 
 
-list=['w100w0_01','w100w0_1','w100w1','w100w10','w100w100','w100w1000']
+list=['w0_01w0_01','w0_01w0_1','w0_01w1','w0_01w10','w0_01w100','w0_01w1000']
 yy=[]
 ww=[]
 for i in range(6):
@@ -52,7 +52,7 @@ plt.plot(x, yy[4],label='w2='+str(ww[4]))
 plt.plot(x, yy[5],label='w2='+str(ww[5]))
 # 添加标题和坐标轴标签以及图例
 plt.title('w1='+str(w1))
-plt.xlabel("s")
+plt.xlabel("time(s)")
 plt.ylabel("curvature")
 plt.legend()
 plt.show()
