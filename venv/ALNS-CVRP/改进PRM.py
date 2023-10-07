@@ -198,8 +198,8 @@ def generate_road_map(sample_x, sample_y, rr , rrr, kdtree, obstacle_kd_tree):
             nx = sample_x[indexes[ii]]
             ny = sample_y[indexes[ii]]
             # 对每个领域点$q'$进行判断，如果$q$和$q'$尚未形成路径，则将其连接形成路径并进行碰撞检测，若无碰撞，则保留该路径。
-            #if not is_collision(ix, iy, nx, ny, rr,rrr,kdtree, obstacle_kd_tree):
-            if not collision(nx, ny,rr,rrr,kdtree):
+            if not is_collision(ix, iy, nx, ny, rr,rrr,kdtree, obstacle_kd_tree):
+            #if not collision(nx, ny,rr,rrr,kdtree):
               edge_id.append(indexes[ii])
 
 
@@ -340,7 +340,7 @@ def dashedCircle(x0,y0):
 
 def collision(tx, ty,rr,rrr,kdtree):
     flag=0
-    n=5
+    n=2
     nearest_k_points = []
     olddist=[]
     dist=[]

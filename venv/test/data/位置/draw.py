@@ -31,7 +31,7 @@ for i in range(6):
   w = list[i]
   file_name = S_QP + w + '.txt'
   s = w.replace('_', '')
-  print(s)
+  #print(s)
   w1,w2=cut(s)
   with open(file_name, 'r') as file:
     points = []
@@ -41,13 +41,18 @@ for i in range(6):
 
 
   x  = [item[0] for item in points]
+  xx=  [item[0]-5 for item in points]
   y = [item[1] for item in points]
-  print(y)
+  #print(y)
   yy.append(y)
   ww.append(w2)
-print(yy)
+#print(yy)
 
-
+print(rx)
+print(ry)
+print(x)
+print(xx)
+print(yy[5])
 # 绘制线图并添加标注
 plt.plot(rx, ry,  label='Original Trajectory')
 #plt.plot(x, yy[0],label='Smooth trajectory')
