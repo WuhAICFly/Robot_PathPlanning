@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from scipy.spatial import KDTree
 from celluloid import Camera  # 保存动图时用，pip install celluloid
 show_animation = True
-
+plt.rc('font',family='Times New Roman')
 def opentxt():
  n=0
  sum=0
@@ -191,8 +191,8 @@ def main(rng=None):
           14.277, 14.146, 14.01, 13.867, 13.716, 13.559, 13.393, 13.218, 13.034, 12.839, 12.634, 12.418, 12.189, 11.948,
           11.693, 11.425, 11.143, 10.847, 10.536, 10.209, 9.8675, 9.51, 9.1367, 8.7472, 8.3415, 7.9195, 7.4812, 7.0263,
           6.555, 6.0671, 5.5628, 5.0419]
-    plt.plot(rx, ry, label='Original Trajectory')
-    plt.plot(xx, yy, label='Smooth trajectory')
+    plt.plot(rx, ry, label=' Original Trajectory')
+    plt.plot(xx, yy, label=' Smooth trajectory')
     w1 = 100
     # 添加标题和坐标轴标签以及图例
     plt.title('w1=' + str(w1))
