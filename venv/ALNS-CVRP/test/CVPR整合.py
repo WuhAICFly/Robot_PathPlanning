@@ -89,7 +89,8 @@ def findindex(target,pos):
     else:
         return -1
 
-def tspPos(ind,flag,currentPath,ppos,pos,i):
+def tspPos(ind,flag,currentPath,ppos,pos,i,path,lst):
+    idnum = 0
     print("当前路段currentPath:", currentPath)
     # flag 相邻段能加入当前段flag=1，否则为0
     if flag == 1:  # 如果上一次发生拆分
@@ -108,27 +109,38 @@ def tspPos(ind,flag,currentPath,ppos,pos,i):
         currentPath.append(tuple(ppos))  # 加入拆分点
     currentPath = currentPath
     # 求最近邻所在路段索引
+    print("pos长度=",len(pos))
     id = findindex(neighbors[2][0], pos)
-    print(id)
+    print("id:",id)
+
     # 删除第id项，即第id项路段
     #if flag == 1 or i==0:  # 如果上一次发生拆分
     oldpos=pos
     rmpos=pos[id]
+    #分解路段
+    p1 = [p[0] for p in rmpos]
+    p2 = [p[1] for p in rmpos]
+    #print(len(lst))
+    # 删除子列表p1
+    new_path= [item for item in path if item != p1]
+    new_locatoins = [item for item in lst if item != p2]
+    #print(len(new_locatoins))
     print("rmpos:", rmpos)
-    print("pos：",pos)
+    print("pos：",len(pos))
     del pos[id]
     curroad = pos
     ##求距离平均最小路段 返回最小路段
-    print("curroad:", curroad)
+    print("curroad:", len(curroad))
     minpathindex = foundPath(curroad, neighbors[2][0])
     p = [p[0] for p in curroad[minpathindex]]
+    print("最近路段索引：", minpathindex)
     print("最小距离路段：", p)
 
     print("带需求最小距离路段：", curroad[minpathindex])
     neighbors, ind3 = find_k_nearest_neighbors(p, neighbors[2][0], len(p))
     n_neighbors = [x[0] for x in neighbors]
-    print("最小距离路段中离出发点最近邻：", n_neighbors)
-    print("最小距离路段中离出发点带距离最近邻：", neighbors)
+    print("最小距离路段中拆分点最近邻：", n_neighbors)
+    print("最小距离路段中拆分点带距离最近邻：", neighbors)
     reorder_p = sorted(curroad[minpathindex], key=lambda x: next((i[1] for i in neighbors if i[0] == x[0]), None))
     print("带需求最小距离路段重排reorder_p：", reorder_p)
     # 求满足容量限制的最优合并点
@@ -162,8 +174,12 @@ def tspPos(ind,flag,currentPath,ppos,pos,i):
         new_lst = currentPath[:neighborindex] + [
             (currentPath[neighborindex][0], currentPath[neighborindex][1] / 2.0)] + currentPath[neighborindex + 1:]
         ppos = [(currentPath[neighborindex][0], currentPath[neighborindex][1] / 2.0)]  # 拆分需求的拆分点
-
+        # path=new_path
+        # locations=np.array(new_locatoins)
+        idnum=id
         new_lst.append(reorder_p[index])
+        addPos=reorder_p[index]
+        print("加入点：",addPos)
         print("新的TSP路段:", new_lst)
         write_to_file('tsp1.txt', new_lst)
 
@@ -177,7 +193,7 @@ def tspPos(ind,flag,currentPath,ppos,pos,i):
     currentPath = curroad[minpathindex]#下一个路段
     ind = currentPath.index(reorder_p[index])#上一次合并点索引号
     print("ppos=:",ppos)
-    return minpathindex,ind,flag,currentPath,ppos,curroad,splittpoint
+    return minpathindex,ind,flag,currentPath,ppos,curroad,splittpoint,idnum
 
 capacity=112
 
@@ -196,7 +212,9 @@ path = eval(path)  # 将字符串转换为列表格式
 lst1, lst2=vrp()
 locations = np.array(lst1)
 lst3 = list(zip(lst1, lst2))
-print("带需求路径点lst1",lst1)
+
+print("路径点lst1",lst1)
+print("需求lst2",lst2)
 print("带需求路径点lst3",lst3)
 
 pos = []
@@ -243,20 +261,28 @@ ppos=[((37.0, 31.0), 7.0)]
 curroad=pos
 #curroad=[[((35.0, 35.0), 0.0), ((45.0, 30.0), 17.0), ((57.0, 29.0), 18.0), ((63.0, 23.0), 2.0), ((65.0, 20.0), 6.0), ((65.0, 35.0), 3.0), ((64.0, 42.0), 9.0), ((56.0, 39.0), 36.0), ((56.0, 37.0), 6.0), ((35.0, 35.0), 0.0)], [((35.0, 35.0), 0.0), ((47.0, 47.0), 13.0), ((55.0, 54.0), 26.0), ((57.0, 48.0), 23.0), ((55.0, 45.0), 13.0), ((53.0, 43.0), 14.0), ((50.0, 35.0), 19.0), ((35.0, 35.0), 0.0)], [((35.0, 35.0), 0.0), ((41.0, 49.0), 10.0), ((40.0, 60.0), 21.0), ((45.0, 65.0), 9.0), ((49.0, 73.0), 25.0), ((57.0, 68.0), 15.0), ((55.0, 60.0), 16.0), ((53.0, 52.0), 11.0), ((35.0, 35.0), 0.0)], [((35.0, 35.0), 0.0), ((26.0, 52.0), 9.0), ((24.0, 58.0), 19.0), ((30.0, 60.0), 16.0), ((27.0, 69.0), 10.0), ((31.0, 67.0), 3.0), ((35.0, 69.0), 23.0), ((37.0, 56.0), 5.0), ((37.0, 47.0), 6.0), ((35.0, 40.0), 16.0), ((35.0, 35.0), 0.0)], [((35.0, 35.0), 0.0), ((41.0, 37.0), 16.0), ((49.0, 42.0), 13.0), ((61.0, 52.0), 3.0), ((65.0, 55.0), 14.0), ((63.0, 65.0), 8.0), ((62.0, 77.0), 20.0), ((49.0, 58.0), 10.0), ((31.0, 52.0), 27.0), ((35.0, 35.0), 0.0)], [((35.0, 35.0), 0.0), ((27.0, 43.0), 9.0), ((15.0, 47.0), 16.0), ((13.0, 52.0), 36.0), ((10.0, 43.0), 9.0), ((6.0, 38.0), 16.0), ((14.0, 37.0), 11.0), ((20.0, 40.0), 12.0), ((35.0, 35.0), 0.0)], [((35.0, 35.0), 0.0), ((25.0, 30.0), 3.0), ((12.0, 24.0), 13.0), ((10.0, 20.0), 19.0), ((4.0, 18.0), 35.0), ((5.0, 30.0), 2.0), ((11.0, 31.0), 7.0), ((17.0, 34.0), 3.0), ((26.0, 35.0), 15.0), ((35.0, 35.0), 0.0)], [((35.0, 35.0), 0.0), ((26.0, 27.0), 27.0), ((19.0, 21.0), 10.0), ((15.0, 19.0), 1.0), ((11.0, 14.0), 18.0), ((18.0, 18.0), 17.0), ((20.0, 20.0), 8.0), ((22.0, 22.0), 2.0), ((25.0, 24.0), 20.0), ((35.0, 35.0), 0.0)], [((35.0, 35.0), 0.0), ((49.0, 11.0), 18.0), ((45.0, 10.0), 18.0), ((42.0, 7.0), 5.0), ((30.0, 5.0), 8.0), ((23.0, 3.0), 7.0), ((5.0, 5.0), 16.0), ((15.0, 10.0), 20.0), ((24.0, 12.0), 5.0), ((32.0, 12.0), 7.0), ((35.0, 17.0), 7.0), ((35.0, 35.0), 0.0)], [((35.0, 35.0), 0.0), ((36.0, 26.0), 18.0), ((45.0, 20.0), 11.0), ((47.0, 16.0), 25.0), ((46.0, 13.0), 8.0), ((44.0, 17.0), 9.0), ((40.0, 25.0), 9.0), ((37.0, 31.0), 14.0), ((35.0, 35.0), 0.0)], [((35.0, 35.0), 0.0), ((55.0, 20.0), 19.0), ((60.0, 12.0), 31.0), ((67.0, 5.0), 25.0), ((55.0, 5.0), 29.0), ((53.0, 12.0), 6.0), ((35.0, 35.0), 0.0)], [((35.0, 35.0), 0.0), ((20.0, 50.0), 5.0), ((15.0, 60.0), 17.0), ((20.0, 65.0), 12.0), ((15.0, 77.0), 9.0), ((6.0, 68.0), 30.0), ((2.0, 60.0), 5.0), ((8.0, 56.0), 27.0), ((2.0, 48.0), 1.0), ((35.0, 35.0), 0.0)], [((35.0, 35.0), 0.0), ((15.0, 30.0), 26.0), ((16.0, 22.0), 41.0), ((18.0, 24.0), 22.0), ((20.0, 26.0), 9.0), ((22.0, 27.0), 11.0), ((35.0, 35.0), 0.0)]]
 i=0
-while(i<1):
+
+while(i<10):
     if curroad==[]:
       break
-    minpathindex,ind,flag,currentPath,ppos,curroad,splittpoint=tspPos(ind,flag,currentPath,ppos,curroad,i)
+    minpathindex,ind,flag,currentPath,ppos,curroad,splittpoint,idnum=tspPos(ind,flag,currentPath,ppos,curroad,i,path,lst1)
     print("ind:", ind)
     print("flag:", flag)
     #print("需求拆分点:", ppos)
     print("currentPath:", currentPath)
-    print("path:", path)
-    print("curroad:", curroad)
+    print("idnum:",idnum)
+    print("pos长度",len(pos))
+    print("path:", len(path))
+    print("curroad:", len(curroad))
     print("splittpoint:", splittpoint)
     print("i=:",i)
     i=i+1
-
+    print("path[idnum]:", path[idnum])
+    new_list = [lst1[i] for i in path[idnum]]
+    print(curroad[minpathindex])
+    print(new_list)
+    if flag==1:
+      del path[idnum]
 
 
 #     ##
@@ -269,5 +295,5 @@ while(i<1):
 #
 #
 # #画图
-draw(path,locations,[splittpoint],pos[minpathindex])
+draw(path,locations,[splittpoint],curroad[minpathindex])
 
