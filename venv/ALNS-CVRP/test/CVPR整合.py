@@ -102,14 +102,14 @@ def tspPos(ind,flag,currentPath,ppos,pos,i,path,lst):
     neighbors, ind2 = find_k_nearest_neighbors(curPath, lst1[0], len(curPath))  # 从当前路段找到离原点最近点作为拆分点
     print("原点：",lst1[0])
     print("原点在当前路段的K近邻：",neighbors)
-    print("离出发点最近neighbors:", neighbors[2][0])
+    print("拆分点:", neighbors[2][0])
     splittpoint = neighbors[2][0]  # 拆分点
     if flag == 1:  # 如果上一次发生拆分
         ppos = [i for x in ppos for i in x]
         currentPath.append(tuple(ppos))  # 加入拆分点
     currentPath = currentPath
     # 求最近邻所在路段索引
-    print("pos长度=",len(pos))
+
     id = findindex(neighbors[2][0], pos)
     print("id:",id)
 
@@ -126,9 +126,10 @@ def tspPos(ind,flag,currentPath,ppos,pos,i,path,lst):
     new_locatoins = [item for item in lst if item != p2]
     #print(len(new_locatoins))
     print("rmpos:", rmpos)
-    print("pos：",len(pos))
+
     del pos[id]
     curroad = pos
+    print("pos长度=", len(pos))
     ##求距离平均最小路段 返回最小路段
     print("curroad:", len(curroad))
     minpathindex = foundPath(curroad, neighbors[2][0])
@@ -193,6 +194,7 @@ def tspPos(ind,flag,currentPath,ppos,pos,i,path,lst):
     currentPath = curroad[minpathindex]#下一个路段
     ind = currentPath.index(reorder_p[index])#上一次合并点索引号
     print("ppos=:",ppos)
+    print("pos2ci",pos)
     return minpathindex,ind,flag,currentPath,ppos,curroad,splittpoint,idnum
 
 capacity=112
@@ -265,24 +267,25 @@ i=0
 while(i<10):
     if curroad==[]:
       break
+
     minpathindex,ind,flag,currentPath,ppos,curroad,splittpoint,idnum=tspPos(ind,flag,currentPath,ppos,curroad,i,path,lst1)
-    print("ind:", ind)
+    # print("ind:", ind)
     print("flag:", flag)
-    #print("需求拆分点:", ppos)
-    print("currentPath:", currentPath)
-    print("idnum:",idnum)
-    print("pos长度",len(pos))
-    print("path:", len(path))
-    print("curroad:", len(curroad))
-    print("splittpoint:", splittpoint)
-    print("i=:",i)
+    # #print("需求拆分点:", ppos)
+    # print("currentPath:", currentPath)
+    # print("idnum:",idnum)
+    print("pos", pos)
+    # print("path:", len(path))
+    # print("curroad:", len(curroad))
+    # print("splittpoint:", splittpoint)
+    # print("i=:",i)
     i=i+1
-    print("path[idnum]:", path[idnum])
-    new_list = [lst1[i] for i in path[idnum]]
-    print(curroad[minpathindex])
-    print(new_list)
-    if flag==1:
-      del path[idnum]
+    # print("path[idnum]:", path[idnum])
+    # new_list = [lst1[i] for i in path[idnum]]
+    # print(curroad[minpathindex])
+    # print(new_list)
+    # if flag==1:
+    #   del path[idnum]
 
 
 #     ##
