@@ -10,11 +10,18 @@ def write_to_file(file_name, data):
   f.write(data)
   f.write(' ')
   f.write('\n')
-def draw(path1,locations,points,minpath):
+def draw(path1,locations,pos,points,minpath):
     #路线图绘制
     fig=plt.figure(1)
-    for path in path1:
-        plt.plot(locations[path][:,0],locations[path][:,1], marker='o')
+    for p in pos:
+        pp=[p[0] for p in p]
+        pp = np.array(pp)
+        #print("pp:",pp)
+        for i in range(len(pp)+1):
+            plt.plot(pp[0:i, 0], pp[0:i, 1],marker='o')
+
+    # for path in path1:
+    #     plt.plot(locations[path][:,0],locations[path][:,1], marker='o')
     plt.scatter([p[0] for p in points], [p[1] for p in points], marker='^', s=60)
     for i, p in enumerate(points):
         plt.annotate(str(i+1), (p[0] + 0.7, p[1] - 0.5))
@@ -89,8 +96,8 @@ def findindex(target,pos):
     else:
         return -1
 
-def tspPos(ind,flag,currentPath,ppos,pos,i,path,lst):
-    idnum = 0
+def tspPos(ind,flag,currentPath,ppos,pos,i,path,lst,idnum):
+
     print("当前路段currentPath:", currentPath)
     # flag 相邻段能加入当前段flag=1，否则为0
     if flag == 1:  # 如果上一次发生拆分
@@ -109,7 +116,7 @@ def tspPos(ind,flag,currentPath,ppos,pos,i,path,lst):
         currentPath.append(tuple(ppos))  # 加入拆分点
     currentPath = currentPath
     # 求最近邻所在路段索引
-
+    print("pos:",pos)
     id = findindex(neighbors[2][0], pos)
     print("id:",id)
 
@@ -126,7 +133,6 @@ def tspPos(ind,flag,currentPath,ppos,pos,i,path,lst):
     new_locatoins = [item for item in lst if item != p2]
     #print(len(new_locatoins))
     print("rmpos:", rmpos)
-
     del pos[id]
     curroad = pos
     print("pos长度=", len(pos))
@@ -195,7 +201,7 @@ def tspPos(ind,flag,currentPath,ppos,pos,i,path,lst):
     ind = currentPath.index(reorder_p[index])#上一次合并点索引号
     print("ppos=:",ppos)
     print("pos2ci",pos)
-    return minpathindex,ind,flag,currentPath,ppos,curroad,splittpoint,idnum
+    return minpathindex,ind,flag,currentPath,ppos,curroad,splittpoint,idnum, pos
 
 capacity=112
 
@@ -263,29 +269,30 @@ ppos=[((37.0, 31.0), 7.0)]
 curroad=pos
 #curroad=[[((35.0, 35.0), 0.0), ((45.0, 30.0), 17.0), ((57.0, 29.0), 18.0), ((63.0, 23.0), 2.0), ((65.0, 20.0), 6.0), ((65.0, 35.0), 3.0), ((64.0, 42.0), 9.0), ((56.0, 39.0), 36.0), ((56.0, 37.0), 6.0), ((35.0, 35.0), 0.0)], [((35.0, 35.0), 0.0), ((47.0, 47.0), 13.0), ((55.0, 54.0), 26.0), ((57.0, 48.0), 23.0), ((55.0, 45.0), 13.0), ((53.0, 43.0), 14.0), ((50.0, 35.0), 19.0), ((35.0, 35.0), 0.0)], [((35.0, 35.0), 0.0), ((41.0, 49.0), 10.0), ((40.0, 60.0), 21.0), ((45.0, 65.0), 9.0), ((49.0, 73.0), 25.0), ((57.0, 68.0), 15.0), ((55.0, 60.0), 16.0), ((53.0, 52.0), 11.0), ((35.0, 35.0), 0.0)], [((35.0, 35.0), 0.0), ((26.0, 52.0), 9.0), ((24.0, 58.0), 19.0), ((30.0, 60.0), 16.0), ((27.0, 69.0), 10.0), ((31.0, 67.0), 3.0), ((35.0, 69.0), 23.0), ((37.0, 56.0), 5.0), ((37.0, 47.0), 6.0), ((35.0, 40.0), 16.0), ((35.0, 35.0), 0.0)], [((35.0, 35.0), 0.0), ((41.0, 37.0), 16.0), ((49.0, 42.0), 13.0), ((61.0, 52.0), 3.0), ((65.0, 55.0), 14.0), ((63.0, 65.0), 8.0), ((62.0, 77.0), 20.0), ((49.0, 58.0), 10.0), ((31.0, 52.0), 27.0), ((35.0, 35.0), 0.0)], [((35.0, 35.0), 0.0), ((27.0, 43.0), 9.0), ((15.0, 47.0), 16.0), ((13.0, 52.0), 36.0), ((10.0, 43.0), 9.0), ((6.0, 38.0), 16.0), ((14.0, 37.0), 11.0), ((20.0, 40.0), 12.0), ((35.0, 35.0), 0.0)], [((35.0, 35.0), 0.0), ((25.0, 30.0), 3.0), ((12.0, 24.0), 13.0), ((10.0, 20.0), 19.0), ((4.0, 18.0), 35.0), ((5.0, 30.0), 2.0), ((11.0, 31.0), 7.0), ((17.0, 34.0), 3.0), ((26.0, 35.0), 15.0), ((35.0, 35.0), 0.0)], [((35.0, 35.0), 0.0), ((26.0, 27.0), 27.0), ((19.0, 21.0), 10.0), ((15.0, 19.0), 1.0), ((11.0, 14.0), 18.0), ((18.0, 18.0), 17.0), ((20.0, 20.0), 8.0), ((22.0, 22.0), 2.0), ((25.0, 24.0), 20.0), ((35.0, 35.0), 0.0)], [((35.0, 35.0), 0.0), ((49.0, 11.0), 18.0), ((45.0, 10.0), 18.0), ((42.0, 7.0), 5.0), ((30.0, 5.0), 8.0), ((23.0, 3.0), 7.0), ((5.0, 5.0), 16.0), ((15.0, 10.0), 20.0), ((24.0, 12.0), 5.0), ((32.0, 12.0), 7.0), ((35.0, 17.0), 7.0), ((35.0, 35.0), 0.0)], [((35.0, 35.0), 0.0), ((36.0, 26.0), 18.0), ((45.0, 20.0), 11.0), ((47.0, 16.0), 25.0), ((46.0, 13.0), 8.0), ((44.0, 17.0), 9.0), ((40.0, 25.0), 9.0), ((37.0, 31.0), 14.0), ((35.0, 35.0), 0.0)], [((35.0, 35.0), 0.0), ((55.0, 20.0), 19.0), ((60.0, 12.0), 31.0), ((67.0, 5.0), 25.0), ((55.0, 5.0), 29.0), ((53.0, 12.0), 6.0), ((35.0, 35.0), 0.0)], [((35.0, 35.0), 0.0), ((20.0, 50.0), 5.0), ((15.0, 60.0), 17.0), ((20.0, 65.0), 12.0), ((15.0, 77.0), 9.0), ((6.0, 68.0), 30.0), ((2.0, 60.0), 5.0), ((8.0, 56.0), 27.0), ((2.0, 48.0), 1.0), ((35.0, 35.0), 0.0)], [((35.0, 35.0), 0.0), ((15.0, 30.0), 26.0), ((16.0, 22.0), 41.0), ((18.0, 24.0), 22.0), ((20.0, 26.0), 9.0), ((22.0, 27.0), 11.0), ((35.0, 35.0), 0.0)]]
 i=0
-
-while(i<10):
+idnum = 0
+while(i<16):
     if curroad==[]:
       break
 
-    minpathindex,ind,flag,currentPath,ppos,curroad,splittpoint,idnum=tspPos(ind,flag,currentPath,ppos,curroad,i,path,lst1)
+    minpathindex,ind,flag,currentPath,ppos,curroad,splittpoint,idnum,pos=tspPos(ind,flag,currentPath,ppos,curroad,i,path,lst1,idnum)
     # print("ind:", ind)
     print("flag:", flag)
     # #print("需求拆分点:", ppos)
-    # print("currentPath:", currentPath)
-    # print("idnum:",idnum)
-    print("pos", pos)
-    # print("path:", len(path))
-    # print("curroad:", len(curroad))
-    # print("splittpoint:", splittpoint)
-    # print("i=:",i)
+    print("currentPath:", len(currentPath))
+    print("idnum:",idnum)
+    print("pos", len(pos))
+    print("path:", path)
+    print("curroad:",len(curroad))
+    print("splittpoint:", splittpoint)
+    print("i=:",i)
     i=i+1
-    # print("path[idnum]:", path[idnum])
+    print("path[idnum]:", path[idnum])
+
     # new_list = [lst1[i] for i in path[idnum]]
     # print(curroad[minpathindex])
     # print(new_list)
-    # if flag==1:
-    #   del path[idnum]
+    if flag==1:
+      del path[idnum]
 
 
 #     ##
@@ -298,5 +305,5 @@ while(i<10):
 #
 #
 # #画图
-draw(path,locations,[splittpoint],curroad[minpathindex])
+draw(path,locations,curroad,[splittpoint],curroad[minpathindex])
 
