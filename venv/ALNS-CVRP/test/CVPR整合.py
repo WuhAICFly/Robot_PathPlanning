@@ -10,28 +10,78 @@ def write_to_file(file_name, data):
   f.write(data)
   f.write(' ')
   f.write('\n')
-def draw(path1,locations,pos,points,minpath):
-    #路线图绘制
-    fig=plt.figure(1)
+def draw(path1,locations,pos,points,minpath,comPos,N,new_lst):
+    # 创建图表和子图
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 5))
     for p in pos:
         pp=[p[0] for p in p]
         pp = np.array(pp)
         #print("pp:",pp)
         for i in range(len(pp)+1):
-            plt.plot(pp[0:i, 0], pp[0:i, 1],marker='o')
+            ax1.plot(pp[0:i, 0], pp[0:i, 1],marker='o')
 
     # for path in path1:
     #     plt.plot(locations[path][:,0],locations[path][:,1], marker='o')
-    plt.scatter([p[0] for p in points], [p[1] for p in points], marker='^', s=60)
+    ax1.scatter([p[0] for p in points], [p[1] for p in points], marker='^', s=60)
     for i, p in enumerate(points):
-        plt.annotate(str(i+1), (p[0] + 0.7, p[1] - 0.5))
+        ax1.annotate(str(i+1), (p[0] + 0.7, p[1] - 0.5))
     p = [p[0] for p in minpath]
     for pos in p:
-        plt.plot(pos[:][0], pos[:][1],marker='*')
-    # 设置轴范围
-    plt.xlim(0, 80)
-    plt.ylim(0, 80)
+        ax1.plot(pos[:][0], pos[:][1],marker='*')
+    comPos1 = [p[0] for p in comPos]
+    ax1.scatter([p[0] for p in comPos1], [p[1] for p in comPos1], marker='+',s=150)
+    # 在第二个子图中绘制第二个图形
+    # with open('tsp1.txt', 'r') as f:
+    #     lines = f.readlines()
+    #     pp=[]
+    #     i=0
+    #     for i in range(N):
+    #      points = lines[i]
+    #      points = eval(points)
+    #      pp.append(points)
+    #     print(len(pp))
+    #     for p in pp:
+    #         pp = [p[0] for p in p]
+    #         pp = np.array(pp)
+    #         # print("pp:",pp)
+    #         for i in range(len(pp) + 1):
+    #             ax2.plot(pp[0:i, 0], pp[0:i, 1], marker='o')
+    new_lst = [p[0] for p in new_lst]
+    new_lst = np.array(new_lst)
+    for i in range(len(new_lst) + 1):
+        ax2.plot(new_lst[0:i, 0], new_lst[0:i, 1], marker='o')
+    comPos = [p[0] for p in comPos]
+    ax2.scatter([p[0] for p in comPos], [p[1] for p in comPos], marker='+', s=150)
+    # ax2.plot(x, y2, label='y2')
+    # ax2.set_xlabel('x轴')
+    # ax2.set_ylabel('y轴')
+    # ax2.set_title('第二个图形')
+    # ax2.legend()
+
+    # 显示图表
     plt.show()
+
+    # #路线图绘制
+    # fig=plt.figure(1)
+    # for p in pos:
+    #     pp=[p[0] for p in p]
+    #     pp = np.array(pp)
+    #     #print("pp:",pp)
+    #     for i in range(len(pp)+1):
+    #         plt.plot(pp[0:i, 0], pp[0:i, 1],marker='o')
+    #
+    # # for path in path1:
+    # #     plt.plot(locations[path][:,0],locations[path][:,1], marker='o')
+    # plt.scatter([p[0] for p in points], [p[1] for p in points], marker='^', s=60)
+    # for i, p in enumerate(points):
+    #     plt.annotate(str(i+1), (p[0] + 0.7, p[1] - 0.5))
+    # p = [p[0] for p in minpath]
+    # for pos in p:
+    #     plt.plot(pos[:][0], pos[:][1],marker='*')
+    # # 设置轴范围
+    # plt.xlim(0, 80)
+    # plt.ylim(0, 80)
+    # plt.show()
 def pathdistance(lst,pos,k):
     # 初始化距离之和为0
     total_distance = 0
@@ -98,13 +148,19 @@ def findindex(target,pos):
 
 
 
-def tspPos(ind,flag,currentPath,ppos,pos,i,path,lst,idnum):
+def tspPos(indd,flag,currentPath,ppos,pos,i,path,lst,idnum,reorder_p,new_lst):
 
     print("当前路段currentPath:", currentPath)
-    # flag 相邻段能加入当前段flag=1，否则为0
-    if flag == 1:  # 如果上一次发生拆分
-       print("合并点：",currentPath[ind])
-       del currentPath[ind]  # 删除合并点
+    comPos = []
+    # # flag 相邻段能加入当前段flag=1，否则为0
+    # if flag == 1:  # 如果上一次发生拆分
+    #
+    #  for index in indd:
+    #    print("合并点：",reorder_p[index])
+    #    comPos.append(reorder_p[index])
+    #
+    #    currentPath = [ppp for i, ppp in enumerate(currentPath) if ppp != reorder_p[index]]
+       #del currentPath[ind]  # 删除合并点
 
     curPath = [p[0] for p in currentPath]
     print("curPath:",curPath)
@@ -121,6 +177,7 @@ def tspPos(ind,flag,currentPath,ppos,pos,i,path,lst,idnum):
     print("pos:",pos)
     id = findindex(neighbors[2][0], pos)
     print("id:",id)
+    idd.append(id)
 
     # 删除第id项，即第id项路段
     #if flag == 1 or i==0:  # 如果上一次发生拆分
@@ -142,9 +199,10 @@ def tspPos(ind,flag,currentPath,ppos,pos,i,path,lst,idnum):
     print("curroad:", len(curroad))
     minpathindex = foundPath(curroad, neighbors[2][0])
     p = [p[0] for p in curroad[minpathindex]]
+    pp.append(p)
     print("最近路段索引：", minpathindex)
     print("最小距离路段：", p)
-
+    currPath = curroad[minpathindex]  # if road!=reorder_p]#下一个路段
     print("带需求最小距离路段：", curroad[minpathindex])
     neighbors, ind3 = find_k_nearest_neighbors(p, neighbors[2][0], len(p))
     n_neighbors = [x[0] for x in neighbors]
@@ -211,12 +269,21 @@ def tspPos(ind,flag,currentPath,ppos,pos,i,path,lst,idnum):
         # path=new_path
         # locations=np.array(new_locatoins)
         idnum=id
+
         for index in indd:
           new_lst.append(reorder_p[index])
-          print("合入的点:",reorder_p[index])
-        #   Newreorder_p=[ppp for i, ppp in enumerate(reorder_p) if ppp != reorder_p[index]]
+          print("合并点：", reorder_p[index])
+          comPos.append(reorder_p[index])
+          print(currPath)
+
+          currPath = [ppp for i, ppp in enumerate(currPath) if ppp != reorder_p[index]]
+          print(len(currPath))
+        print("comPos", comPos)
+
+        #   Newreorder_p=[ppp for i, ppp in enumerate(curroad[minpathindex]) if ppp != reorder_p[index]]
         # print("被合并后的拆分点最近邻路段:",Newreorder_p)
-        # list = [sublist for i, sublist in enumerate(curroad) if sublist !=reorder_p]
+        # print(curroad)
+        # list = [sublist for i, sublist in enumerate(curroad) if sublist !=curroad[minpathindex]]
         #
         # print(list)
         # # 输出: [[1, 2, 3], [5, 1, 9, 0]]
@@ -229,16 +296,18 @@ def tspPos(ind,flag,currentPath,ppos,pos,i,path,lst,idnum):
 
 
     else:
+
         curroad = curroad + [rmpos]
         print("未拆分时curroad：",curroad)
         flag = 0
         index=0
         ppos=lst3[0]
+    currentPath= currPath
     #currentPath=Newreorder_p
-    currentPath =curroad[minpathindex] #if road!=reorder_p]#下一个路段
-    ind = currentPath.index(reorder_p[index])#上一次合并点索引号
+    #currentPath =curroad[minpathindex] #if road!=reorder_p]#下一个路段
+    # ind = currentPath.index(reorder_p[index])#上一次合并点索引号
     print("ppos=:",ppos)
-    return minpathindex,ind,flag,currentPath,ppos,curroad,splittpoint,idnum, pos
+    return minpathindex,indd,flag,currentPath,ppos,curroad,splittpoint,idnum, pos,reorder_p,comPos,new_lst
 
 capacity=112
 
@@ -307,24 +376,33 @@ curroad=pos
 #curroad=[[((35.0, 35.0), 0.0), ((45.0, 30.0), 17.0), ((57.0, 29.0), 18.0), ((63.0, 23.0), 2.0), ((65.0, 20.0), 6.0), ((65.0, 35.0), 3.0), ((64.0, 42.0), 9.0), ((56.0, 39.0), 36.0), ((56.0, 37.0), 6.0), ((35.0, 35.0), 0.0)], [((35.0, 35.0), 0.0), ((47.0, 47.0), 13.0), ((55.0, 54.0), 26.0), ((57.0, 48.0), 23.0), ((55.0, 45.0), 13.0), ((53.0, 43.0), 14.0), ((50.0, 35.0), 19.0), ((35.0, 35.0), 0.0)], [((35.0, 35.0), 0.0), ((41.0, 49.0), 10.0), ((40.0, 60.0), 21.0), ((45.0, 65.0), 9.0), ((49.0, 73.0), 25.0), ((57.0, 68.0), 15.0), ((55.0, 60.0), 16.0), ((53.0, 52.0), 11.0), ((35.0, 35.0), 0.0)], [((35.0, 35.0), 0.0), ((26.0, 52.0), 9.0), ((24.0, 58.0), 19.0), ((30.0, 60.0), 16.0), ((27.0, 69.0), 10.0), ((31.0, 67.0), 3.0), ((35.0, 69.0), 23.0), ((37.0, 56.0), 5.0), ((37.0, 47.0), 6.0), ((35.0, 40.0), 16.0), ((35.0, 35.0), 0.0)], [((35.0, 35.0), 0.0), ((41.0, 37.0), 16.0), ((49.0, 42.0), 13.0), ((61.0, 52.0), 3.0), ((65.0, 55.0), 14.0), ((63.0, 65.0), 8.0), ((62.0, 77.0), 20.0), ((49.0, 58.0), 10.0), ((31.0, 52.0), 27.0), ((35.0, 35.0), 0.0)], [((35.0, 35.0), 0.0), ((27.0, 43.0), 9.0), ((15.0, 47.0), 16.0), ((13.0, 52.0), 36.0), ((10.0, 43.0), 9.0), ((6.0, 38.0), 16.0), ((14.0, 37.0), 11.0), ((20.0, 40.0), 12.0), ((35.0, 35.0), 0.0)], [((35.0, 35.0), 0.0), ((25.0, 30.0), 3.0), ((12.0, 24.0), 13.0), ((10.0, 20.0), 19.0), ((4.0, 18.0), 35.0), ((5.0, 30.0), 2.0), ((11.0, 31.0), 7.0), ((17.0, 34.0), 3.0), ((26.0, 35.0), 15.0), ((35.0, 35.0), 0.0)], [((35.0, 35.0), 0.0), ((26.0, 27.0), 27.0), ((19.0, 21.0), 10.0), ((15.0, 19.0), 1.0), ((11.0, 14.0), 18.0), ((18.0, 18.0), 17.0), ((20.0, 20.0), 8.0), ((22.0, 22.0), 2.0), ((25.0, 24.0), 20.0), ((35.0, 35.0), 0.0)], [((35.0, 35.0), 0.0), ((49.0, 11.0), 18.0), ((45.0, 10.0), 18.0), ((42.0, 7.0), 5.0), ((30.0, 5.0), 8.0), ((23.0, 3.0), 7.0), ((5.0, 5.0), 16.0), ((15.0, 10.0), 20.0), ((24.0, 12.0), 5.0), ((32.0, 12.0), 7.0), ((35.0, 17.0), 7.0), ((35.0, 35.0), 0.0)], [((35.0, 35.0), 0.0), ((36.0, 26.0), 18.0), ((45.0, 20.0), 11.0), ((47.0, 16.0), 25.0), ((46.0, 13.0), 8.0), ((44.0, 17.0), 9.0), ((40.0, 25.0), 9.0), ((37.0, 31.0), 14.0), ((35.0, 35.0), 0.0)], [((35.0, 35.0), 0.0), ((55.0, 20.0), 19.0), ((60.0, 12.0), 31.0), ((67.0, 5.0), 25.0), ((55.0, 5.0), 29.0), ((53.0, 12.0), 6.0), ((35.0, 35.0), 0.0)], [((35.0, 35.0), 0.0), ((20.0, 50.0), 5.0), ((15.0, 60.0), 17.0), ((20.0, 65.0), 12.0), ((15.0, 77.0), 9.0), ((6.0, 68.0), 30.0), ((2.0, 60.0), 5.0), ((8.0, 56.0), 27.0), ((2.0, 48.0), 1.0), ((35.0, 35.0), 0.0)], [((35.0, 35.0), 0.0), ((15.0, 30.0), 26.0), ((16.0, 22.0), 41.0), ((18.0, 24.0), 22.0), ((20.0, 26.0), 9.0), ((22.0, 27.0), 11.0), ((35.0, 35.0), 0.0)]]
 i=0
 idnum = 0
-while(i<1):
+indd=[]
+reorder_p=[]
+new_lst=[]
+#comPos = []
+N=4
+idd=[]
+pp=[]
+while(i<N):
     if curroad==[]:
       break
 
-    minpathindex,ind,flag,currentPath,ppos,curroad,splittpoint,idnum,pos=tspPos(ind,flag,currentPath,ppos,curroad,i,path,lst1,idnum)
+    minpathindex,indd,flag,currentPath,ppos,curroad,splittpoint,idnum,pos,reorder_p,comPos,new_lst=tspPos(indd,flag,currentPath,ppos,curroad,i,path,lst1,idnum,reorder_p,new_lst)
+    print("idd:",idd)
+    print("发生整合的路段：",pp)
     # print("ind:", ind)
     print("flag:", flag)
     # #print("需求拆分点:", ppos)
     print("currentPath:", len(currentPath))
     print("idnum:",idnum)
-    print("pos", len(pos))
+    print("pos", pos)
     print("path:", path)
-    print("curroad:",len(curroad))
+    print("curroad:",curroad)
     print("splittpoint:", splittpoint)
     print("i=:",i)
     i=i+1
     print("path[idnum]:", path[idnum])
-
+    #print(new_lst)
     # new_list = [lst1[i] for i in path[idnum]]
     # print(curroad[minpathindex])
     # print(new_list)
@@ -342,5 +420,5 @@ while(i<1):
 #
 #
 # #画图
-draw(path,locations,curroad,[splittpoint],curroad[minpathindex])
+draw(path,locations,curroad,[splittpoint],curroad[minpathindex],comPos,N,new_lst)
 

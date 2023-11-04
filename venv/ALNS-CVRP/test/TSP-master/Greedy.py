@@ -31,7 +31,7 @@ def write_to_file(lst):
         for i, row in enumerate(lst):
             tspfile.write(f"{i} {row[0]} {row[1]}\n")
 
-lst=readtxt(11)
+lst=readtxt(4)
 print(lst)
 write_to_file(lst)
 dataframe = pd.read_csv("output.tsp",sep=" ",header=None)

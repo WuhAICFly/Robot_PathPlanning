@@ -38,7 +38,7 @@ def readtxt(i):
         print(lst)
         return lst
 
-lst=readtxt(5)
+lst=readtxt(0)
 points = np.array(lst)
 distmat = np.zeros((len(points), len(points)))
 
