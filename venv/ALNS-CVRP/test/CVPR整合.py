@@ -380,7 +380,7 @@ indd=[]
 reorder_p=[]
 new_lst=[]
 #comPos = []
-N=4
+N=1
 idd=[]
 pp=[]
 while(i<N):

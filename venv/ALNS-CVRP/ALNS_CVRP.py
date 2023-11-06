@@ -327,9 +327,11 @@ if __name__ == '__main__':
     config = get_config()#参数实例化
     locations,demands = generate_demo(config)#生成demo
     tpl_lst1, tpl_lst2 = vrp()
-    print(tpl_lst1)
-    locations = np.array(tpl_lst1)
-    demands = np.array(tpl_lst2)
+    print("tpl_lst1:",tpl_lst1)
+    print("tpl_lst2:", tpl_lst2)
+    locations = np.array([(-5,10),(6.8,-10.6),(39.9,34.0),(0,0),(17.4,13.6),(51.4,-1.1),(20,3.6),(33.4,-11.6),(50,20),(64.6,14.0),(30,10),(33.2,9.9),(33,13),(35.2,20.5)]
+)
+    demands = np.array([0,80,125,110,156,170,101,170,140,180,179,241,233,188])
 
    # locations=np.array([[0,0],[4,-8],[-2,5],[2,6],[-4,-3],[1,2],[6,-3],[-1,0]])
    # demands = np.array([0,0.56,0.54,0.31,0.08,0.27,0.14,0.1])
