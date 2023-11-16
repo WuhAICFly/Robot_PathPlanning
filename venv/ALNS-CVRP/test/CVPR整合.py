@@ -148,7 +148,7 @@ def findindex(target,pos):
 
 
 
-def tspPos(indd,flag,currentPath,ppos,pos,i,path,lst,idnum,reorder_p,new_lst):
+def tspPos(indd,flag,currentPath,ppos,pos,i,path,lst,idnum,reorder_p,new_lst,tpos):
 
     print("当前路段currentPath:", currentPath)
     comPos = []
@@ -161,7 +161,9 @@ def tspPos(indd,flag,currentPath,ppos,pos,i,path,lst,idnum,reorder_p,new_lst):
     #
     #    currentPath = [ppp for i, ppp in enumerate(currentPath) if ppp != reorder_p[index]]
        #del currentPath[ind]  # 删除合并点
-
+    if(currentPath==[((35.0, 35.0), 0.0), ((35.0, 35.0), 0.0)]):
+       print("发生消除路段事件")
+       currentPath=nerb(pos, tpos)
     curPath = [p[0] for p in currentPath]
     print("curPath:",curPath)
     neighbors, ind2 = find_k_nearest_neighbors(curPath, lst1[0], len(curPath))  # 从当前路段找到离原点最近点作为拆分点
@@ -308,7 +310,27 @@ def tspPos(indd,flag,currentPath,ppos,pos,i,path,lst,idnum,reorder_p,new_lst):
     # ind = currentPath.index(reorder_p[index])#上一次合并点索引号
     print("ppos=:",ppos)
     return minpathindex,indd,flag,currentPath,ppos,curroad,splittpoint,idnum, pos,reorder_p,comPos,new_lst
-
+def nerb(list,pos):
+    lst = []
+    for p in list:
+        for p1 in p:
+            lst.append(p1[0])
+    print(lst)
+    nearest_neighbors, ind1 = find_k_nearest_neighbors(lst[1:], lst[0], len(lst) - 1)
+    for i in range(len(lst) - 1):
+        if (nearest_neighbors[i] != ((35.0, 35.0), 0)):
+            k = i
+            break
+    print(k)
+    print("离出发点最近nearest_neighbors:", nearest_neighbors)
+    k_neighbors = [x[0] for x in nearest_neighbors]
+    print(k_neighbors)
+    # 求最近邻所在路段索引
+    id = findindex(k_neighbors[k], pos)
+    print(id)
+    print("路点在路段pos[id]", pos[id])  # 确定拆分起始路段
+    currentPath = pos[id]
+    return  currentPath
 capacity=112
 
 with open('../path', 'r') as f:
@@ -339,6 +361,7 @@ for sublist in path:
     pos.append(temp)
 print("路段pos",pos)
 print("pos段数",len(pos))
+tpos=pos
 ##求最近K近邻
 # d=[]
 # nearest_k_points=[]
@@ -358,17 +381,19 @@ print("pos段数",len(pos))
 #points = [(41, 49), (35, 17), (55, 45), (55, 20), (15, 30), (25, 30), (20, 50), (10, 43), (55, 60), (30, 60), (20, 65), (50, 35), (30, 25), (15, 10), (30, 5), (10, 20), (5, 30), (20, 40), (15, 60), (45, 65), (45, 20), (45, 10), (55, 5), (65, 35), (65, 20), (45, 30), (35, 40), (41, 37), (64, 42), (40, 60), (31, 52), (35, 69), (53, 52), (65, 55), (63, 65), (2, 60), (20, 20), (5, 5), (60, 12), (40, 25), (42, 7), (24, 12), (23, 3), (11, 14), (6, 38), (2, 48), (8, 56), (13, 52), (6, 68), (47, 47), (49, 58), (27, 43), (37, 31), (57, 29), (63, 23), (53, 12), (32, 12), (36, 26), (21, 24), (17, 34), (12, 24), (24, 58), (27, 69), (15, 77), (62, 77), (49, 73), (67, 5), (56, 39), (37, 47), (37, 56), (57, 68), (47, 16), (44, 17), (46, 13), (49, 11), (49, 42), (53, 43), (61, 52), (57, 48), (56, 37), (55, 54), (15, 47), (14, 37), (11, 31), (16, 22), (4, 18), (28, 18), (26, 52), (26, 35), (31, 67), (15, 19), (22, 22), (18, 24), (26, 27), (25, 24), (22, 27), (25, 21), (19, 21), (20, 26), (18, 18)]
 
 #求K近邻
-nearest_neighbors,ind1 = find_k_nearest_neighbors(lst1[1:], lst1[0],2)
+nearest_neighbors, ind1 = find_k_nearest_neighbors(lst1[1:], lst1[0], 2)
 print("离出发点最近nearest_neighbors:", nearest_neighbors)
 k_neighbors = [x[0] for x in nearest_neighbors]
 print(k_neighbors)
-#求最近邻所在路段索引
-id=findindex(k_neighbors[0],pos)
+# 求最近邻所在路段索引
+id = findindex(k_neighbors[0], pos)
 print(id)
-print("路点在路段pos[id]",pos[id])#确定拆分起始路段
+print("路点在路段pos[id]", pos[id])  # 确定拆分起始路段
+currentPath = pos[id]
+
 flag=0
 minpathindex=0
-currentPath=pos[id]
+
 #currentPath=[((35.0, 35.0), 0.0), ((21.0, 24.0), 28.0), ((25.0, 21.0), 12.0), ((28.0, 18.0), 26.0), ((30.0, 25.0), 23.0), ((35.0, 35.0), 0.0)]
 ind=-1
 ppos=[((37.0, 31.0), 7.0)]
@@ -380,14 +405,14 @@ indd=[]
 reorder_p=[]
 new_lst=[]
 #comPos = []
-N=1
+N=4
 idd=[]
 pp=[]
 while(i<N):
     if curroad==[]:
       break
 
-    minpathindex,indd,flag,currentPath,ppos,curroad,splittpoint,idnum,pos,reorder_p,comPos,new_lst=tspPos(indd,flag,currentPath,ppos,curroad,i,path,lst1,idnum,reorder_p,new_lst)
+    minpathindex,indd,flag,currentPath,ppos,curroad,splittpoint,idnum,pos,reorder_p,comPos,new_lst=tspPos(indd,flag,currentPath,ppos,curroad,i,path,lst1,idnum,reorder_p,new_lst,tpos)
     print("idd:",idd)
     print("发生整合的路段：",pp)
     # print("ind:", ind)
