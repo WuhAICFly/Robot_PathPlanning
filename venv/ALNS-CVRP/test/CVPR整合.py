@@ -48,10 +48,11 @@ def draw(path1,locations,pos,points,minpath,comPos,N,new_lst):
     #             ax2.plot(pp[0:i, 0], pp[0:i, 1], marker='o')
     new_lst = [p[0] for p in new_lst]
     new_lst = np.array(new_lst)
-    for i in range(len(new_lst) + 1):
-        ax2.plot(new_lst[0:i, 0], new_lst[0:i, 1], marker='o')
-    comPos = [p[0] for p in comPos]
-    ax2.scatter([p[0] for p in comPos], [p[1] for p in comPos], marker='+', s=150)
+    if new_lst!=[]:
+        for i in range(len(new_lst) + 1):
+            ax2.plot(new_lst[0:i, 0], new_lst[0:i, 1], marker='o')
+        comPos = [p[0] for p in comPos]
+        ax2.scatter([p[0] for p in comPos], [p[1] for p in comPos], marker='+', s=150)
     # ax2.plot(x, y2, label='y2')
     # ax2.set_xlabel('x轴')
     # ax2.set_ylabel('y轴')
@@ -293,6 +294,7 @@ def tspPos(indd,flag,currentPath,ppos,pos,i,path,lst,idnum,reorder_p,new_lst,tpo
         # print(curroad)
         # addPos=reorder_p[index]
         # print("加入点：",addPos)
+        del new_lst[0]
         print("新的TSP路段:", new_lst)
         write_to_file('tsp1.txt', new_lst)
 
@@ -405,7 +407,7 @@ indd=[]
 reorder_p=[]
 new_lst=[]
 #comPos = []
-N=4
+N=2
 idd=[]
 pp=[]
 while(i<N):

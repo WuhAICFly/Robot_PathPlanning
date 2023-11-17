@@ -15,8 +15,8 @@ def readtxt(i):
     with open('../tsp1.txt', 'r') as f:
         lines = f.readlines()
         points = lines[i]
-        points = eval(points)
-        points = [p[0] for p in points]
+        ppoints = eval(points)
+        points = [p[0] for p in ppoints]
         del points[0]
         # draw(points)
         # 将元组转换为列表
@@ -25,13 +25,13 @@ def readtxt(i):
             p = [i for i in p]
             lst.append(p)
         #print(lst)
-        return lst
+        return lst , ppoints
 def write_to_file(lst):
     with open('output.tsp', 'w') as tspfile:
         for i, row in enumerate(lst):
             tspfile.write(f"{i} {row[0]} {row[1]}\n")
 
-lst=readtxt(3)
+lst,ppoints=readtxt(0)
 print(lst)
 write_to_file(lst)
 dataframe = pd.read_csv("output.tsp",sep=" ",header=None)
@@ -81,7 +81,11 @@ while True:
 sumpath+=dist[0][j]
 end = time.clock()
 print("结果：")
+print(ppoints)
 print(sumpath)
+with open("data.txt", "w") as f:
+    f.write(str(ppoints) + "\n")
+    f.write(str(sumpath) + "\n")
 for m in range(n):
     print("%s "%(s[m]))
 print("程序的运行时间是：%s"%(end-start))

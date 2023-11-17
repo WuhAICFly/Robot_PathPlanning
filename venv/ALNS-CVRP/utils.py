@@ -17,8 +17,8 @@ def get_config(args=None):
     #使用 argparse 的第一步是创建一个 ArgumentParser 对象
     parser = argparse.ArgumentParser(description="Meta optimization")
     #help：对参数的简单，描述
-    parser.add_argument('--customers_num', type=int, default=14, help="客户最大数量")
-    parser.add_argument('--capacity', type=float, default=420, help="车辆最大容量")
+    parser.add_argument('--customers_num', type=int, default=32, help="客户最大数量")
+    parser.add_argument('--capacity', type=float, default=100, help="车辆最大容量")
     parser.add_argument('--EPSILON', type=float, default=0.00000000001, help="一个非常小的数值")
     parser.add_argument('--map_x_max', type=float, default=1000, help="x轴最大范围")
     parser.add_argument('--map_y_max', type=float, default=1000, help="y轴最大范围")
