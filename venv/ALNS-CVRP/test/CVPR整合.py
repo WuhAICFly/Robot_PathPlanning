@@ -333,7 +333,7 @@ def nerb(list,pos):
     print("路点在路段pos[id]", pos[id])  # 确定拆分起始路段
     currentPath = pos[id]
     return  currentPath
-capacity=112
+
 
 with open('../path', 'r') as f:
    path = f.read()
@@ -407,7 +407,8 @@ indd=[]
 reorder_p=[]
 new_lst=[]
 #comPos = []
-N=2
+capacity=120
+N=9
 idd=[]
 pp=[]
 while(i<N):
