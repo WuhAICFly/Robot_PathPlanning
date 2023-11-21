@@ -4,13 +4,15 @@ import matplotlib.pyplot as plt
 from scipy.spatial import KDTree
 from typing import List, Tuple
 import math
+import time
+plt.rc('font',family='Times New Roman')
 def write_to_file(file_name, data):
  with open(file_name, 'a') as f:
   data = str(data)
   f.write(data)
   f.write(' ')
   f.write('\n')
-def draw(path1,locations,pos,points,minpath,comPos,N,new_lst):
+def draw(path1,locations,pos,points,minpath,comPos,N,new_lst,figname,rmppos):
     # 创建图表和子图
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 5))
     for p in pos:
@@ -19,7 +21,10 @@ def draw(path1,locations,pos,points,minpath,comPos,N,new_lst):
         #print("pp:",pp)
         for i in range(len(pp)+1):
             ax1.plot(pp[0:i, 0], pp[0:i, 1],marker='o')
-
+    p = [p[0] for p in rmppos]
+    x_coords = [x[0] for x in p]
+    y_coords = [y[1] for y in p]
+    ax1.plot(x_coords,y_coords,linestyle='--',marker='o',color='gray')
     # for path in path1:
     #     plt.plot(locations[path][:,0],locations[path][:,1], marker='o')
     ax1.scatter([p[0] for p in points], [p[1] for p in points], marker='^', s=60)
@@ -30,6 +35,9 @@ def draw(path1,locations,pos,points,minpath,comPos,N,new_lst):
         ax1.plot(pos[:][0], pos[:][1],marker='*')
     comPos1 = [p[0] for p in comPos]
     ax1.scatter([p[0] for p in comPos1], [p[1] for p in comPos1], marker='+',s=150)
+    ax1.set_xlabel('X-axis')
+    ax1.set_ylabel('Y-axis')
+    ax1.set_title('Route')
     # 在第二个子图中绘制第二个图形
     # with open('tsp1.txt', 'r') as f:
     #     lines = f.readlines()
@@ -50,18 +58,22 @@ def draw(path1,locations,pos,points,minpath,comPos,N,new_lst):
     new_lst = np.array(new_lst)
     if new_lst!=[]:
         for i in range(len(new_lst) + 1):
-            ax2.plot(new_lst[0:i, 0], new_lst[0:i, 1], marker='o')
+            ax2.plot(new_lst[0:i, 0], new_lst[0:i, 1],marker='o')
         comPos = [p[0] for p in comPos]
         ax2.scatter([p[0] for p in comPos], [p[1] for p in comPos], marker='+', s=150)
     # ax2.plot(x, y2, label='y2')
-    # ax2.set_xlabel('x轴')
-    # ax2.set_ylabel('y轴')
-    # ax2.set_title('第二个图形')
+    ax2.set_xlabel('X-axis')
+    ax2.set_ylabel('Y-axis')
+    ax2.set_title('Current TSP Route')
     # ax2.legend()
 
-    # 显示图表
+    # # 显示图表
+    # plt.title('Route')
+    # plt.xlabel("X-axis")
+    # plt.ylabel("Y-axis")
     plt.show()
-
+    filepath = f"C:/Users/wuhon/Desktop/AA/A/{figname}.png"
+    fig.savefig(filepath)
     # #路线图绘制
     # fig=plt.figure(1)
     # for p in pos:
@@ -162,7 +174,7 @@ def tspPos(indd,flag,currentPath,ppos,pos,i,path,lst,idnum,reorder_p,new_lst,tpo
     #
     #    currentPath = [ppp for i, ppp in enumerate(currentPath) if ppp != reorder_p[index]]
        #del currentPath[ind]  # 删除合并点
-    if(currentPath==[((35.0, 35.0), 0.0), ((35.0, 35.0), 0.0)]):
+    if(currentPath==[tpos[0][0], tpos[0][0]]):
        print("发生消除路段事件")
        currentPath=nerb(pos, tpos)
     curPath = [p[0] for p in currentPath]
@@ -294,6 +306,9 @@ def tspPos(indd,flag,currentPath,ppos,pos,i,path,lst,idnum,reorder_p,new_lst,tpo
         # print(curroad)
         # addPos=reorder_p[index]
         # print("加入点：",addPos)
+
+        tsp_pos=new_lst
+        rm=new_lst[0]
         del new_lst[0]
         print("新的TSP路段:", new_lst)
         write_to_file('tsp1.txt', new_lst)
@@ -310,8 +325,10 @@ def tspPos(indd,flag,currentPath,ppos,pos,i,path,lst,idnum,reorder_p,new_lst,tpo
     #currentPath=Newreorder_p
     #currentPath =curroad[minpathindex] #if road!=reorder_p]#下一个路段
     # ind = currentPath.index(reorder_p[index])#上一次合并点索引号
-    print("ppos=:",ppos)
-    return minpathindex,indd,flag,currentPath,ppos,curroad,splittpoint,idnum, pos,reorder_p,comPos,new_lst
+    if flag==1:
+      new_lst=[rm]+tsp_pos
+
+    return minpathindex,indd,flag,currentPath,ppos,curroad,splittpoint,idnum, pos,reorder_p,comPos,new_lst,rmpos
 def nerb(list,pos):
     lst = []
     for p in list:
@@ -345,7 +362,8 @@ path = eval(path)  # 将字符串转换为列表格式
 #  [0, 6, 61, 16, 86, 17, 84, 60, 89, 0], [0, 94, 98, 91, 44, 100, 37, 92, 95, 0], [0, 59, 97, 87, 13, 0],
 #  [0, 75, 22, 41, 15, 43, 38, 14, 42, 57, 2, 0], [0, 58, 21, 72, 74, 73, 40, 53, 0], [0, 4, 39, 67, 23, 56, 0],
 #  [0, 7, 19, 11, 64, 49, 36, 47, 46, 0], [0, 5, 85, 93, 99, 96, 0]]
-
+capacity=100
+N=4
 #路段数据整合
 lst1, lst2=vrp()
 locations = np.array(lst1)
@@ -361,6 +379,9 @@ for sublist in path:
     for index in sublist:
         temp.append(lst3[index])
     pos.append(temp)
+if N==1:
+  with open("C:/Users/wuhon/Desktop/AA/A/data.txt", "a") as f:
+    f.write(str(pos) + "\n")
 print("路段pos",pos)
 print("pos段数",len(pos))
 tpos=pos
@@ -381,7 +402,7 @@ tpos=pos
 # print("nearest_k_points:",nearest_k_points)
 # print("current point:",lst1[0])
 #points = [(41, 49), (35, 17), (55, 45), (55, 20), (15, 30), (25, 30), (20, 50), (10, 43), (55, 60), (30, 60), (20, 65), (50, 35), (30, 25), (15, 10), (30, 5), (10, 20), (5, 30), (20, 40), (15, 60), (45, 65), (45, 20), (45, 10), (55, 5), (65, 35), (65, 20), (45, 30), (35, 40), (41, 37), (64, 42), (40, 60), (31, 52), (35, 69), (53, 52), (65, 55), (63, 65), (2, 60), (20, 20), (5, 5), (60, 12), (40, 25), (42, 7), (24, 12), (23, 3), (11, 14), (6, 38), (2, 48), (8, 56), (13, 52), (6, 68), (47, 47), (49, 58), (27, 43), (37, 31), (57, 29), (63, 23), (53, 12), (32, 12), (36, 26), (21, 24), (17, 34), (12, 24), (24, 58), (27, 69), (15, 77), (62, 77), (49, 73), (67, 5), (56, 39), (37, 47), (37, 56), (57, 68), (47, 16), (44, 17), (46, 13), (49, 11), (49, 42), (53, 43), (61, 52), (57, 48), (56, 37), (55, 54), (15, 47), (14, 37), (11, 31), (16, 22), (4, 18), (28, 18), (26, 52), (26, 35), (31, 67), (15, 19), (22, 22), (18, 24), (26, 27), (25, 24), (22, 27), (25, 21), (19, 21), (20, 26), (18, 18)]
-
+start_time = time.time()
 #求K近邻
 nearest_neighbors, ind1 = find_k_nearest_neighbors(lst1[1:], lst1[0], 2)
 print("离出发点最近nearest_neighbors:", nearest_neighbors)
@@ -407,15 +428,15 @@ indd=[]
 reorder_p=[]
 new_lst=[]
 #comPos = []
-capacity=120
-N=9
+
+
 idd=[]
 pp=[]
 while(i<N):
     if curroad==[]:
       break
 
-    minpathindex,indd,flag,currentPath,ppos,curroad,splittpoint,idnum,pos,reorder_p,comPos,new_lst=tspPos(indd,flag,currentPath,ppos,curroad,i,path,lst1,idnum,reorder_p,new_lst,tpos)
+    minpathindex,indd,flag,currentPath,ppos,curroad,splittpoint,idnum,pos,reorder_p,comPos,new_lst,rmppos=tspPos(indd,flag,currentPath,ppos,curroad,i,path,lst1,idnum,reorder_p,new_lst,tpos)
     print("idd:",idd)
     print("发生整合的路段：",pp)
     # print("ind:", ind)
@@ -429,13 +450,16 @@ while(i<N):
     print("splittpoint:", splittpoint)
     print("i=:",i)
     i=i+1
-    print("path[idnum]:", path[idnum])
+    #print("path[idnum]:", path[idnum])
     #print(new_lst)
     # new_list = [lst1[i] for i in path[idnum]]
     # print(curroad[minpathindex])
     # print(new_list)
     if flag==1:
       del path[idnum]
+
+elapsed_time = time.time() - start_time
+print(f"代码执行时间：{elapsed_time:.2f}秒")
 
 
 #     ##
@@ -448,5 +472,5 @@ while(i<N):
 #
 #
 # #画图
-draw(path,locations,curroad,[splittpoint],curroad[minpathindex],comPos,N,new_lst)
+draw(path,locations,curroad,[splittpoint],curroad[minpathindex],comPos,N,new_lst,N,rmppos)
 

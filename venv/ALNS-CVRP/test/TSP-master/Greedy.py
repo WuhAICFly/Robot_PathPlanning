@@ -30,8 +30,8 @@ def write_to_file(lst):
     with open('output.tsp', 'w') as tspfile:
         for i, row in enumerate(lst):
             tspfile.write(f"{i} {row[0]} {row[1]}\n")
-
-lst,ppoints=readtxt(9)
+K=4
+lst,ppoints=readtxt(K)
 print(lst)
 write_to_file(lst)
 dataframe = pd.read_csv("output.tsp",sep=" ",header=None)
@@ -83,9 +83,13 @@ end = time.clock()
 print("结果：")
 print(ppoints)
 print(sumpath)
-with open("data.txt", "w") as f:
+if K==0 :
+  with open("C:/Users/wuhon/Desktop/AA/A/data.txt", "a") as f:
+        f.write("新TSP:\n")
+with open("C:/Users/wuhon/Desktop/AA/A/data.txt", "a") as f:
     f.write(str(ppoints) + "\n")
     f.write(str(sumpath) + "\n")
+
 for m in range(n):
     print("%s "%(s[m]))
 print("程序的运行时间是：%s"%(end-start))

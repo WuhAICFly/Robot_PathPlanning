@@ -336,12 +336,15 @@ if __name__ == '__main__':
    # demands = np.array([0,0.56,0.54,0.31,0.08,0.27,0.14,0.1])
     distance_matrix = genDistanceMat(locations[:,0], locations[:,1])#计算距离矩阵
     best_solution,best_cost = ALNS(distance_matrix,locations,demands)
+    with open("C:/Users/wuhon/Desktop/AA/A/data.txt", "a") as f:
+        f.write("ALNS-CVRP:")
+        f.write(str(best_cost) + "\n")
     print("打印locations：",locations,"打印demands：",demands)
     print("最终最优解方案为:",best_solution,"解成本为:",best_cost)
     print("回路数：",len(best_solution))
     write_to_file('path', best_solution)
     write_to_file('demand', demands)
-    draw(best_solution,locations,'1')
+    draw(best_solution,locations,'CVRP')
    
     
 
