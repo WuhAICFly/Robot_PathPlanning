@@ -362,8 +362,8 @@ path = eval(path)  # 将字符串转换为列表格式
 #  [0, 6, 61, 16, 86, 17, 84, 60, 89, 0], [0, 94, 98, 91, 44, 100, 37, 92, 95, 0], [0, 59, 97, 87, 13, 0],
 #  [0, 75, 22, 41, 15, 43, 38, 14, 42, 57, 2, 0], [0, 58, 21, 72, 74, 73, 40, 53, 0], [0, 4, 39, 67, 23, 56, 0],
 #  [0, 7, 19, 11, 64, 49, 36, 47, 46, 0], [0, 5, 85, 93, 99, 96, 0]]
-capacity=100
-N=4
+capacity=3000
+N=1
 #路段数据整合
 lst1, lst2=vrp()
 locations = np.array(lst1)
@@ -442,11 +442,12 @@ while(i<N):
     # print("ind:", ind)
     print("flag:", flag)
     # #print("需求拆分点:", ppos)
-    print("currentPath:", len(currentPath))
+    print("currentPath:", currentPath)
     print("idnum:",idnum)
     print("pos", pos)
     print("path:", path)
     print("curroad:",curroad)
+    print("currentPath:", currentPath)
     print("splittpoint:", splittpoint)
     print("i=:",i)
     i=i+1

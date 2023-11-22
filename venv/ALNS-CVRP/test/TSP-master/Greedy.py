@@ -30,7 +30,7 @@ def write_to_file(lst):
     with open('output.tsp', 'w') as tspfile:
         for i, row in enumerate(lst):
             tspfile.write(f"{i} {row[0]} {row[1]}\n")
-K=4
+K=1
 lst,ppoints=readtxt(K)
 print(lst)
 write_to_file(lst)
