@@ -11,14 +11,16 @@ import math
 import argparse
 import elkai
 import matplotlib.pyplot as plt
+
 plt.rc('font',family='Times New Roman')
 
 def get_config(args=None):
     #使用 argparse 的第一步是创建一个 ArgumentParser 对象
     parser = argparse.ArgumentParser(description="Meta optimization")
     #help：对参数的简单，描述
-    parser.add_argument('--customers_num', type=int, default=101, help="客户最大数量")
-    parser.add_argument('--capacity', type=float, default=400, help="车辆最大容量")
+    ##改3
+    parser.add_argument('--customers_num', type=int, default=33, help="客户最大数量")
+    parser.add_argument('--capacity', type=float, default=120, help="车辆最大容量")
     parser.add_argument('--EPSILON', type=float, default=0.00000000001, help="一个非常小的数值")
     parser.add_argument('--map_x_max', type=float, default=1000, help="x轴最大范围")
     parser.add_argument('--map_y_max', type=float, default=1000, help="y轴最大范围")
@@ -41,7 +43,18 @@ def genDistanceMat(x,y):
     sqdist=ssp.distance.squareform(distMat)
     return sqdist
 
-def draw(solutionbest,locations,figname):
+
+def mkfile():
+    # 获取要创建的文件夹路径
+    folder_path = "C:/Users/wuhon/Desktop/AA/B"
+
+    # 确保文件夹路径不存在
+    if not os.path.exists(folder_path):
+        # 创建文件夹
+        os.mkdir(folder_path)
+    else:
+        print(f"文件夹 {folder_path} 已经存在")
+def draw(solutionbest,locations,filename,figname):
     #路线图绘制
     fig=plt.figure(1)
     for path in solutionbest:
@@ -52,7 +65,7 @@ def draw(solutionbest,locations,figname):
     #plt.grid(False)
     plt.show()
     #fig.savefig(figname)
-    filepath = f"C:/Users/wuhon/Desktop/AA/A/{figname}.png"
+    filepath = f"C:/Users/wuhon/Desktop/AA/{filename}/{figname}.png"
     fig.savefig(filepath)
     #fig.savefig('C:/Users/wuhon/Desktop/AA/A/')
 

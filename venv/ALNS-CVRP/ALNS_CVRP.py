@@ -8,6 +8,7 @@ import numpy as np
 import cv2
 from utils import get_config,genDistanceMat,LK,draw,cal_solution_cost,generate_demo,cal_route_cost
 import copy
+import os
 #import sys
 #sys.path.append("test/")
 
@@ -321,6 +322,33 @@ def write_to_file(file_name, data):
  with open(file_name, 'w') as f:
   data = str(data)
   f.write(data)
+def mkfile(filename):
+    # 获取要创建的文件夹路径
+    folder_path = f"C:/Users/wuhon/Desktop/AA/{filename}"
+
+    # 确保文件夹路径不存在
+    if not os.path.exists(folder_path):
+        # 创建文件夹
+        os.mkdir(folder_path)
+    else:
+        print(f"文件夹 {folder_path} 已经存在")
+def rfile(filename):
+    folder_path = f"C:/Users/wuhon/Desktop/AA/{filename}"
+    # 确保文件夹路径存在
+    if os.path.exists(folder_path):
+        # 检查文件夹是否包含文件
+        if os.listdir(folder_path):
+            # 如果文件夹包含文件,删除文件夹及其内容
+            for filename in os.listdir(folder_path):
+                file_path = os.path.join(folder_path, filename)
+                os.remove(file_path)
+            os.rmdir(folder_path)
+        else:
+            # 如果文件夹不包含文件,删除文件夹
+            os.rmdir(folder_path)
+    else:
+        print(f"文件夹 {folder_path} 不存在")
+
 
 if __name__ == '__main__':
     np.random.seed(1)#固定随机种子，使得每次运行结果相同
@@ -336,7 +364,10 @@ if __name__ == '__main__':
    # demands = np.array([0,0.56,0.54,0.31,0.08,0.27,0.14,0.1])
     distance_matrix = genDistanceMat(locations[:,0], locations[:,1])#计算距离矩阵
     best_solution,best_cost = ALNS(distance_matrix,locations,demands)
-    with open("C:/Users/wuhon/Desktop/AA/A/data.txt", "a") as f:
+    filename = "A"
+    rfile(filename)
+    mkfile(filename)
+    with open(f"C:/Users/wuhon/Desktop/AA/{filename}/data.txt", "a") as f:
         f.write("ALNS-CVRP:")
         f.write(str(best_cost) + "\n")
     print("打印locations：",locations,"打印demands：",demands)
@@ -344,7 +375,7 @@ if __name__ == '__main__':
     print("回路数：",len(best_solution))
     write_to_file('path', best_solution)
     write_to_file('demand', demands)
-    draw(best_solution,locations,'CVRP')
+    draw(best_solution,locations,filename,'CVRP')
    
     
 
