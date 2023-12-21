@@ -337,16 +337,16 @@ def writetxt_savefig(i,file):
      draw(best_solution, locations, figname)
 
 if __name__ == '__main__':
- with open("result.txt", "w") as file:
-  for i in range(1,45,2):
+  with open("result.txt", "w") as file:
+   for i in range(1,45,2):
     customer,demand=readtxt(i)
     np.random.seed(1)#固定随机种子，使得每次运行结果相同
     config = get_config()#参数实例化
     locations,demands = generate_demo(config)#生成demo
     locations =  np.array(customer)
     demands = np.array(demand)
-    #locations=np.array([[0,0],[4,-8],[-2,5],[2,6],[-4,-3],[1,2],[6,-3],[-1,0]])
-    #demands = np.array([0,0.56,0.54,0.31,0.08,0.27,0.14,0.1])
+    # locations=np.array([[0,0],[4,-8],[-2,5],[2,6],[-4,-3],[1,2],[6,-3],[-1,0]])
+    # demands = np.array([0,0.56,0.54,0.31,0.08,0.27,0.14,0.1])
     distance_matrix = genDistanceMat(locations[:,0], locations[:,1])#计算距离矩阵
     best_solution,best_cost = ALNS(distance_matrix,locations,demands)
     print("打印locations：",locations,"打印demands：",demands)

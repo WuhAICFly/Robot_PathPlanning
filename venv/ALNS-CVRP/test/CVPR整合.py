@@ -366,10 +366,16 @@ with open("tsp1.txt", "w") as file:
 #  [0, 75, 22, 41, 15, 43, 38, 14, 42, 57, 2, 0], [0, 58, 21, 72, 74, 73, 40, 53, 0], [0, 4, 39, 67, 23, 56, 0],
 #  [0, 7, 19, 11, 64, 49, 36, 47, 46, 0], [0, 5, 85, 93, 99, 96, 0]]
 #改2
-capacity=120
+capacity=420
 N=30
 #路段数据整合
 lst1, lst2=vrp()
+
+
+print(lst1)
+print(lst2)
+lst1=[(-681100,-1205800),(-697300,-1072700),(-664600,-1122100),(-628200,-1119600),(-696700,-1169400),(-621800,-1168700),(-622200,-1198800)]
+lst2=[0,240,170,190,300,248,100]
 locations = np.array(lst1)
 lst3 = list(zip(lst1, lst2))
 
@@ -383,8 +389,8 @@ for sublist in path:
     for index in sublist:
         temp.append(lst3[index])
     pos.append(temp)
-if N==1:
-  with open("C:/Users/wuhon/Desktop/AA/A/data.txt", "a") as f:
+
+with open("C:/Users/wuhon/Desktop/AA/A/data.txt", "a") as f:
     f.write(str(pos) + "\n")
 print("路段pos",pos)
 print("pos段数",len(pos))
@@ -440,10 +446,14 @@ k=0
 q=0
 
 while(i<N):
-    if len(curroad)==1 or len(curroad)==q:
-      del currentPath[0]
-      print(currentPath)
-      write_to_file('tsp1.txt', currentPath)
+    if len(curroad)==1 or len(curroad)+1==q:
+
+      if len(curroad)==1:
+        del currentPath[0]
+        print(currentPath)
+        write_to_file('tsp1.txt', currentPath)
+      else:
+          print("curroad:", curroad)
       break
 
     minpathindex,indd,flag,currentPath,ppos,curroad,splittpoint,idnum,pos,reorder_p,comPos,new_lst,rmppos=tspPos(indd,flag,currentPath,ppos,curroad,i,path,lst1,idnum,reorder_p,new_lst,tpos)
@@ -469,6 +479,7 @@ while(i<N):
     if flag==1:
       k=k+1
       del path[idnum]
+      q=0
     else:
         q=q+1
     draw(path, locations, curroad, [splittpoint], curroad[minpathindex], comPos,i, new_lst, rmppos)
