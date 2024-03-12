@@ -233,8 +233,8 @@ def dijkstra_planning(sx, sy, gx, gy, road_map, sample_x, sample_y, camara):
 
     @return: Two lists of path coordinates ([x1, x2, ...], [y1, y2, ...]), empty list when no path was found
     """
-    print("sample:", len(sample_x))
-    write_to_file('output.txt', len(sample_x))
+    print("sample:", len(sample_x)-2)
+    write_to_file('传统PRMoutput.txt', len(sample_x))
 
     start_node = Node(sx, sy, 0.0, -1)
     goal_node = Node(gx, gy, 0.0, -1)
@@ -424,7 +424,7 @@ def sample_points(sx, sy, gx, gy, rr, rrr, ox, oy, obstacle_kd_tree, kdtree, rng
     if rng is None:
         rng = np.random.default_rng()
     # print(len(rrr))
-    while m < 200:
+    while m < 500:
         flag = 0
         # time.sleep(1)
         tx = (rng.random() * (max_x - min_x)) + min_x
@@ -445,7 +445,7 @@ def sample_points(sx, sy, gx, gy, rr, rrr, ox, oy, obstacle_kd_tree, kdtree, rng
             if isInsidePolygon(tx, ty):
                 m = m + 1
     print("在自由空间样本数：", m)
-
+    write_to_file('传统PRMoutput.txt', m)
     # 别忘了起点和目标点
     sample_x.append(sx)
     sample_y.append(sy)
@@ -894,19 +894,19 @@ def main(rng=None):
         flag = 1
         print("n=:", n)
         # continue
-        with open('output.txt', 'a') as f:
+        with open('传统PRMoutput.txt', 'a') as f:
             data = str(0)
             f.write(data)
             f.write('\n')
     else:
-        write_to_file('output.txt', 1)
+        write_to_file('传统PRMoutput.txt', 1)
     assert rx, 'Cannot found path'
     # n=n+1
 
     end_time = time.time()
     elapsed_time = end_time - start_time
 
-    write_to_file('output.txt', elapsed_time)
+    write_to_file('传统PRMoutput.txt', elapsed_time)
     print("该算法执行时间为：", elapsed_time, "秒")
     # if show_animation:
 
@@ -932,7 +932,7 @@ def main(rng=None):
 
     print("路径长度为：", total_distance)
     # write_to_file('output.txt', total_distance)
-    with open('output.txt', 'a') as f:
+    with open('传统PRMoutput.txt', 'a') as f:
         data = str(total_distance)
         f.write(data)
         f.write('\n')

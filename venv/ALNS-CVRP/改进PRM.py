@@ -207,7 +207,7 @@ def generate_road_map(sample_x, sample_y, rr , rrr, kdtree, obstacle_kd_tree):
                 break
         road_map.append(edge_id)
         #print("road:",road_map)
-        #plot_road_map(road_map, sample_x, sample_y)
+    plot_road_map(road_map, sample_x, sample_y)
         # time.sleep(2)
     #print("road_map:",road_map)
     return road_map
@@ -234,7 +234,7 @@ def dijkstra_planning(sx, sy, gx, gy, road_map, sample_x, sample_y, camara):
     """
 
     print("sample:",len(sample_x))
-    write_to_file('output.txt', len(sample_x))
+    write_to_file('改进PRMoutput.txt', len(sample_x)-2)
     # 起始节点
     start_node = Node(sx, sy, 0.0, -1)
     # 终止节点
@@ -253,7 +253,7 @@ def dijkstra_planning(sx, sy, gx, gy, road_map, sample_x, sample_y, camara):
             path_found = False
             break
         # 选择代价最小的节点
-        c_id = min(open_set, key=lambda o:open_set[o].cost)
+        c_id = min(open_set, key=lambda o:open_set[o].cost+calc_heuristic(goal_node, open_set[o]))
         current = open_set[c_id]
         # show graph(如果需要可视化)
         if show_animation and len(closed_set.keys()) % 2 == 0:
@@ -451,12 +451,13 @@ def sample_points(sx, sy, gx, gy, rr, rrr, ox, oy, obstacle_kd_tree, kdtree ,rng
     min_y = -13
     print(max_x,min_x)
     sample_x, sample_y = [], []
-
+    m=500#采样样本数
+    write_to_file('改进PRMoutput.txt', m)
     if rng is None:
         rng = np.random.default_rng()
     xy,pbability=Pos_probability(rr,rrr,kdtree,kdtree)
     # 使用numpy.random.choice方法采样坐标点,采样50个点
-    indices = np.random.choice(len(xy), 200, p=pbability)
+    indices = np.random.choice(len(xy), m, p=pbability)
     sampled_points = [xy[i] for i in indices]
     for x,y in sampled_points:
         sample_x.append(x)
@@ -810,7 +811,7 @@ def main(rng=None):
                [41.99, 13.12, 40.65, 9.11, 45.73, 13.03]]
     rr, ccpos = clccircle(Cpionts)
     print(rr)
-    print(ccpos)
+    print("圆心：",ccpos)
     for pos in ccpos:
         #rrr.append(pos[0][0])
         oxx.append(pos[0])
@@ -838,16 +839,16 @@ def main(rng=None):
 
     rx,ry = prm_planning(sx, sy, gx, gy, merged_list, ox, oy, robot_size, kdtree, camara=camara, rng=rng)
     if len(rx)==0:
-        with open('output.txt', 'a') as f:
+        with open('改进PRMoutput.txt', 'a') as f:
             data = str(0)
             f.write(data)
             f.write('\n')
     else:
-      write_to_file('output.txt', 1)
+      write_to_file('改进PRMoutput.txt', 1)
     assert rx, 'Cannot found path'
     end_time = time.time()
     elapsed_time = end_time - start_time
-    write_to_file('output.txt', elapsed_time)
+    write_to_file('改进PRMoutput.txt', elapsed_time)
     print("该算法执行时间为：", elapsed_time, "秒")
 
     #if show_animation:
@@ -874,7 +875,7 @@ def main(rng=None):
         total_distance += math.sqrt((ppos[i][0] - ppos[i - 1][0]) ** 2 + (ppos[i][1] - ppos[i - 1][1]) ** 2)
 
     print("路径长度为：", total_distance)
-    with open('output.txt', 'a') as f:
+    with open('改进PRMoutput.txt', 'a') as f:
         data = str(total_distance)
         f.write(data)
         f.write('\n')

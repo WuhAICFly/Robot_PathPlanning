@@ -19,7 +19,7 @@ def get_config(args=None):
     parser = argparse.ArgumentParser(description="Meta optimization")
     #help：对参数的简单，描述
     ##改3
-    parser.add_argument('--customers_num', type=int, default=1, help="客户最大数量")
+    parser.add_argument('--customers_num', type=int, default=38, help="客户最大数量")
     parser.add_argument('--capacity', type=float, default=420, help="车辆最大容量")
     parser.add_argument('--EPSILON', type=float, default=0.00000000001, help="一个非常小的数值")
     parser.add_argument('--map_x_max', type=float, default=1000, help="x轴最大范围")
@@ -59,10 +59,14 @@ def draw(solutionbest,locations,filename,figname):
     fig=plt.figure(1)
     for path in solutionbest:
         plt.plot(locations[path][:,0],locations[path][:,1], marker='o')
+
     plt.title('Route')
     plt.xlabel("X-axis")
     plt.ylabel("Y-axis")
+    # 设置全局字体大小
+    plt.rcParams.update({'font.size': 20})
     #plt.grid(False)
+
     plt.show()
     #fig.savefig(figname)
     filepath = f"C:/Users/wuhon/Desktop/AA/{filename}/{figname}.png"

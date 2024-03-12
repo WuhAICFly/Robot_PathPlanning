@@ -9,7 +9,7 @@ import numpy as np
 import math
 import time
 
-dataframe = pd.read_csv("./data/TSP25cities.tsp",sep=" ",header=None)
+dataframe = pd.read_csv("./data/TSP.tsp",sep=" ",header=None)
 v = dataframe.iloc[:,1:3]
 
 train_v= np.array(v)
