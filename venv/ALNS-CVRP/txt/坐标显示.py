@@ -32,14 +32,14 @@ def main(rng=None):
     camara = None
     ox = []
     oy = []
-    j=26
+    j=24
     for i in range(1):
         ReadObstacle(j, ox, oy, 1, 0, 0)
         xy=list(zip(ox,oy))
         print(xy)
         if show_animation:
-            #plt.plot(ox, oy, ".k")
-            plt.plot(ox, oy,'gray')
+            plt.plot(ox, oy, ".k")
+            #plt.plot(ox, oy,'gray')
             plt.axis("equal")
             if camara != None:
                 camara.snap()

@@ -32,6 +32,8 @@ for points in new_points:
     ry.append(points[1])
 plt.plot(rx,ry)
 plt.show()
+print(rx)
+print(ry)
 print(new_points)
 
 
