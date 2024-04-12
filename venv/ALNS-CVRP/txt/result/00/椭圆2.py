@@ -5,9 +5,12 @@ from scipy.spatial import KDTree
 from typing import List, Tuple
 import math
 import time
-plt.rc('font',family='Times New Roman')
-#import matplotlib.pyplot as plt
-plt.rcParams['font.family'] = ['SimSun', 'Arial']  # 指定字体，支持中文和英文
+import  os
+from matplotlib.font_manager import FontProperties
+# 设置y轴标签的字体大小
+font_properties = FontProperties(fname='timessimsun.ttf')  # 指定中文字体
+
+
 
 
 # # 定义函数
@@ -45,6 +48,40 @@ def readtxt(filename):
 # for i in range(801,1601):
 #     x1[i]=160-x1[i]
   return x1,y1
+#画线
+def ddraw(val,lag):
+    if val == 0:
+     plt.plot(x2, y2,linewidth=2)
+     if lag==0:
+         plt.xlabel("时间/秒",fontproperties=font_properties,size=16)
+         plt.ylabel("跟踪误差(m)",fontproperties=font_properties,size=16)
+     else:
+         plt.xlabel("Time/s",fontproperties=font_properties,size=16)
+         plt.ylabel("Tracking error(m)",fontproperties=font_properties,size=16)
+    if val == 1:
+     plt.plot(x3, y3,linewidth=2)
+     if lag==0:
+         plt.xlabel("时间/秒", fontproperties=font_properties,size=16)
+         plt.ylabel("速度(m/s)", fontproperties=font_properties,size=16)
+     else:
+         plt.xlabel("Time/s",fontproperties=font_properties,size=16)
+         plt.ylabel("Velocity(m/s)",fontproperties=font_properties,size=16)
+    if val == 2:
+     plt.plot(x4, y4,linewidth=2)
+     if lag==0:
+         plt.xlabel("时间/秒",fontproperties=font_properties,size=16)
+         plt.ylabel("加速度(m/s²)", fontproperties=font_properties,size=16)
+     else:
+         plt.xlabel("Time/s", fontproperties=font_properties,size=16)
+         plt.ylabel("Acceleration(m/s²)",fontproperties=font_properties,size=16)
+    if val == 3:
+     plt.plot(x5, y5,linewidth=2)
+     if lag==0:
+         plt.xlabel("时间/秒",fontproperties=font_properties,size=16)
+         plt.ylabel("曲率",fontproperties=font_properties,size=16)
+     else:
+         plt.xlabel("Time/s",fontproperties=font_properties,size=16)
+         plt.ylabel("Curvature",fontproperties=font_properties,size=16)
 
 #x1,y1=readtxt('S_QP.txt')
 x2,y2=readtxt('E_QP.txt')
@@ -60,18 +97,32 @@ x5,y5=readtxt('k_QP.txt')
 # plt.plot(x+40, y,'b')
 # plt.plot(x+40, Ny,'b')
 # 设置全局字体大小
-plt.rcParams['font.size'] = 20
+plt.rcParams['font.size'] = 15
 #plt.plot(x1, y1,label='S_QP')
-plt.plot(x2, y2,label='E_QP',linewidth=2)
-plt.plot(x3, y3,label='v_QP',linewidth=2)
-plt.plot(x4, y4,label='a_QP',linewidth=2)
-plt.plot(x5, y5,label='k_QP',linewidth=2)
-# 中文
-plt.xlabel("时间/秒",fontdict={'size': 20})
-plt.ylabel("跟踪误差(m) 速度(m/s) 加速度(m/s²) 曲率",fontdict={'size': 20})
-#英文
-# plt.xlabel("Time/s",fontdict={'size': 20})
-# plt.ylabel("Tracking error(m) Velocity(m/s) Acceleration(m/s²) Curvature",fontdict={'size': 12})
+i=0
+j=0
+# 指定保存图片的位置
+
+for j in range(2):
+ # # 创建文件夹
+ # save_path = f'C:/Users/wuhon/Desktop/'  # 请将此路径更改为您想要保存图片的实际路径
+ # os.makedirs(save_path+f'{j}', exist_ok=True)
+ # save_path = f'C:/Users/wuhon/Desktop/{j}'  # 请将此路径更改为您想要保存图片的实际路径
+ # # 改变当前的工作目录到指定的文件夹
+ # os.chdir(save_path)
+ for i in range(4):
+    # 创建一个图形
+  plt.figure()
+  ddraw(i,j)
+  #plt.show()
+# 指定图片的尺寸（分辨率）
+  fig = plt.gcf()
+  fig.set_size_inches(10, 6)  # 设置图像的宽度和高度（单位为英寸）
+  # 保存图片
+  plt.savefig(f'{j}{i}.png',dpi=100)
+  # 关闭图形
+  plt.close()
+  i+=1;
+#language(0,'速度')
 # 显示图像
-plt.legend(loc='upper right',fontsize=12)
-plt.show()
+#plt.legend(loc='upper right',fontsize=12)
